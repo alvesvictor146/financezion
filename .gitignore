@@ -1,0 +1,26 @@
+# Dependências e Cache
+__pycache__/
+*.py[cod]
+*$py.class
+node_modules/
+
+# Arquivos temporários de teste e exportação local
+test_export.xlsx
+Victor_Orcamento_Anual_Atualizado_Teste.xlsx
+test_export.js
+powershell.cmd
+scratch/
+*.tmp
+*.log
+
+# Pacotes zip gerados para deploy
+*.zip
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs e editores
+.vscode/
+.idea/

@@ -1,0 +1,572 @@
+[
+  {
+    "row": 3,
+    "label": "Receitas",
+    "julho": "Julho",
+    "agosto": "Agosto",
+    "setembro": "Setembro",
+    "outubro": "Outubro",
+    "novembro": "Novembro",
+    "dezembro": "Dezembro"
+  },
+  {
+    "row": 4,
+    "label": "Salário Líquido",
+    "julho": 4228.25,
+    "agosto": 4232.3,
+    "setembro": 4232.3,
+    "outubro": 4232.3,
+    "novembro": 4232.3,
+    "dezembro": 4232.3
+  },
+  {
+    "row": 5,
+    "label": "Insalubridade",
+    "julho": 785.67,
+    "agosto": 785.67,
+    "setembro": 785.67,
+    "outubro": 785.67,
+    "novembro": 785.67,
+    "dezembro": 785.67
+  },
+  {
+    "row": 6,
+    "label": "Ajuda Custo Alim (UFESP R$38,42)",
+    "julho": 806.82,
+    "agosto": 883.66,
+    "setembro": 883.66,
+    "outubro": 883.66,
+    "novembro": 883.66,
+    "dezembro": 883.66
+  },
+  {
+    "row": 7,
+    "label": "Quinquênio",
+    "julho": 537.26,
+    "agosto": 537.26,
+    "setembro": 537.26,
+    "outubro": 537.26,
+    "novembro": 537.26,
+    "dezembro": 537.26
+  },
+  {
+    "row": 8,
+    "label": "DEJEM / DELEGADA",
+    "julho": 2495.68,
+    "agosto": 1536.8,
+    "setembro": 2400.0,
+    "outubro": 1535.0,
+    "novembro": 2100.0,
+    "dezembro": 2100.0
+  },
+  {
+    "row": 9,
+    "label": "Férias",
+    "julho": 0.0,
+    "agosto": 0.0,
+    "setembro": 0.0,
+    "outubro": 0.0,
+    "novembro": 0.0,
+    "dezembro": 0.0
+  },
+  {
+    "row": 10,
+    "label": "13º Salário",
+    "julho": 0.0,
+    "agosto": 0.0,
+    "setembro": 0.0,
+    "outubro": 0.0,
+    "novembro": 0.0,
+    "dezembro": 3943.8
+  },
+  {
+    "row": 11,
+    "label": "Renda extra",
+    "julho": 0.0,
+    "agosto": "=1000+200",
+    "setembro": 0.0,
+    "outubro": 0.0,
+    "novembro": 0.0,
+    "dezembro": 0.0
+  },
+  {
+    "row": 12,
+    "label": "Sobra Mensal",
+    "julho": 1004.9,
+    "agosto": 3.05,
+    "setembro": 0.0,
+    "outubro": 0.0,
+    "novembro": 0.0,
+    "dezembro": 0.0
+  },
+  {
+    "row": 13,
+    "label": "Contas Casal",
+    "julho": 0.0,
+    "agosto": 0.0,
+    "setembro": 0.0,
+    "outubro": 0.0,
+    "novembro": 0.0,
+    "dezembro": 0.0
+  },
+  {
+    "row": 14,
+    "label": "Outros",
+    "julho": 0.0,
+    "agosto": 0.0,
+    "setembro": 0.0,
+    "outubro": 0.0,
+    "novembro": 0.0,
+    "dezembro": 0.0
+  },
+  {
+    "row": 15,
+    "label": "Receita Total",
+    "julho": "=SUM(C4:C14)",
+    "agosto": "=SUM(D4:D14)",
+    "setembro": "=SUM(E4:E14)",
+    "outubro": "=SUM(F4:F14)",
+    "novembro": "=SUM(G4:G14)",
+    "dezembro": "=SUM(H4:H14)"
+  },
+  {
+    "row": 16,
+    "label": "ESSENCIAL",
+    "julho": null,
+    "agosto": null,
+    "setembro": null,
+    "outubro": null,
+    "novembro": null,
+    "dezembro": null
+  },
+  {
+    "row": 17,
+    "label": "Contas Casal (lazer, depesas, compras, etc).",
+    "julho": "=448+31+139",
+    "agosto": 768.49,
+    "setembro": 0.0,
+    "outubro": 0.0,
+    "novembro": 0.0,
+    "dezembro": 0.0
+  },
+  {
+    "row": 18,
+    "label": "Alice (gastos extras)",
+    "julho": 240.0,
+    "agosto": 36.39,
+    "setembro": 240.0,
+    "outubro": 240.0,
+    "novembro": 240.0,
+    "dezembro": 240.0
+  },
+  {
+    "row": 19,
+    "label": "Advogados (boleto/mensal)",
+    "julho": 0.0,
+    "agosto": 0.0,
+    "setembro": 0.0,
+    "outubro": 0.0,
+    "novembro": 0.0,
+    "dezembro": 0.0
+  },
+  {
+    "row": 20,
+    "label": "Ajuda casa (pix/mensal)",
+    "julho": 0.0,
+    "agosto": 0.0,
+    "setembro": 250.0,
+    "outubro": 250.0,
+    "novembro": 250.0,
+    "dezembro": 250.0
+  },
+  {
+    "row": 21,
+    "label": "Alimentação trabalho (limite)",
+    "julho": "=206.97+12.9+16.5+6.49+6.29+4+10.5+6.18",
+    "agosto": 464.63,
+    "setembro": 220.0,
+    "outubro": 220.0,
+    "novembro": 220.0,
+    "dezembro": 220.0
+  },
+  {
+    "row": 22,
+    "label": "Combustível (limite)",
+    "julho": 498.82,
+    "agosto": 369.45,
+    "setembro": 650.0,
+    "outubro": 650.0,
+    "novembro": 650.0,
+    "dezembro": 650.0
+  },
+  {
+    "row": 23,
+    "label": "Débitos carro",
+    "julho": 0.0,
+    "agosto": 0.0,
+    "setembro": 0.0,
+    "outubro": 0.0,
+    "novembro": 0.0,
+    "dezembro": 167.74
+  },
+  {
+    "row": 24,
+    "label": "Despesas casa",
+    "julho": 26.85,
+    "agosto": 17.9,
+    "setembro": 0.0,
+    "outubro": 0.0,
+    "novembro": 0.0,
+    "dezembro": 0.0
+  },
+  {
+    "row": 25,
+    "label": "Estacionamento (limite)",
+    "julho": 60.0,
+    "agosto": 130.0,
+    "setembro": 90.0,
+    "outubro": 90.0,
+    "novembro": 90.0,
+    "dezembro": 90.0
+  },
+  {
+    "row": 26,
+    "label": "Farmácia",
+    "julho": 72.67,
+    "agosto": 75.61,
+    "setembro": 50.0,
+    "outubro": 50.0,
+    "novembro": 50.0,
+    "dezembro": 50.0
+  },
+  {
+    "row": 27,
+    "label": "Manutenção carro",
+    "julho": "=544.03+210",
+    "agosto": 416.75,
+    "setembro": 283.68,
+    "outubro": 283.68,
+    "novembro": 238.13,
+    "dezembro": 227.61
+  },
+  {
+    "row": 28,
+    "label": "Mercado (limite)",
+    "julho": 159.91,
+    "agosto": 155.81,
+    "setembro": 200.0,
+    "outubro": 200.0,
+    "novembro": 200.0,
+    "dezembro": 200.0
+  },
+  {
+    "row": 29,
+    "label": "Pensão alimentícia (holerite)",
+    "julho": "=1271.83+36.39",
+    "agosto": 1339.84,
+    "setembro": 1271.83,
+    "outubro": 1271.83,
+    "novembro": 1271.83,
+    "dezembro": 1271.83
+  },
+  {
+    "row": 30,
+    "label": "Recarga celular (boleto/mensal)",
+    "julho": 98.43,
+    "agosto": 99.0,
+    "setembro": 99.0,
+    "outubro": 99.0,
+    "novembro": 99.0,
+    "dezembro": 99.0
+  },
+  {
+    "row": 31,
+    "label": "Saúde",
+    "julho": 140.0,
+    "agosto": 0.0,
+    "setembro": 140.0,
+    "outubro": 0.0,
+    "novembro": 140.0,
+    "dezembro": 0.0
+  },
+  {
+    "row": 32,
+    "label": "Seguro de vida (holerite)",
+    "julho": 82.15,
+    "agosto": 85.56,
+    "setembro": 82.15,
+    "outubro": 82.15,
+    "novembro": 82.15,
+    "dezembro": 82.15
+  },
+  {
+    "row": 33,
+    "label": "Uber / Transporte (limite)",
+    "julho": 47.96,
+    "agosto": 86.66,
+    "setembro": 100.0,
+    "outubro": 100.0,
+    "novembro": 100.0,
+    "dezembro": 100.0
+  },
+  {
+    "row": 34,
+    "label": "Obra",
+    "julho": "=2240.9+450+150",
+    "agosto": 2131.77,
+    "setembro": 1143.77,
+    "outubro": 423.88,
+    "novembro": 117.64,
+    "dezembro": 117.64
+  },
+  {
+    "row": 35,
+    "label": "Outros",
+    "julho": "=20+70+140+61.98+45+20",
+    "agosto": 0.0,
+    "setembro": 0.0,
+    "outubro": 0.0,
+    "novembro": 0.0,
+    "dezembro": 0.0
+  },
+  {
+    "row": 36,
+    "label": "Essencial",
+    "julho": "=SUM(C17:C35)",
+    "agosto": "=SUM(D17:D35)",
+    "setembro": "=SUM(E17:E35)",
+    "outubro": "=SUM(F17:F35)",
+    "novembro": "=SUM(G17:G35)",
+    "dezembro": "=SUM(H17:H35)"
+  },
+  {
+    "row": 37,
+    "label": "Essencial/Receita",
+    "julho": "=C36/C15",
+    "agosto": "=D36/D15",
+    "setembro": "=E36/E15",
+    "outubro": "=F36/F15",
+    "novembro": "=G36/G15",
+    "dezembro": "=H36/H15"
+  },
+  {
+    "row": 38,
+    "label": "ESTILO DE VIDA",
+    "julho": null,
+    "agosto": null,
+    "setembro": null,
+    "outubro": null,
+    "novembro": null,
+    "dezembro": null
+  },
+  {
+    "row": 39,
+    "label": "Academia (crédito/mensal)",
+    "julho": 54.99,
+    "agosto": 54.99,
+    "setembro": 54.99,
+    "outubro": 54.99,
+    "novembro": 54.99,
+    "dezembro": 54.99
+  },
+  {
+    "row": 40,
+    "label": "Acessórios",
+    "julho": 0.0,
+    "agosto": 0.0,
+    "setembro": 0.0,
+    "outubro": 0.0,
+    "novembro": 0.0,
+    "dezembro": 0.0
+  },
+  {
+    "row": 41,
+    "label": "Artigos/Eletrônicos",
+    "julho": 0.0,
+    "agosto": 20.0,
+    "setembro": 0.0,
+    "outubro": 0.0,
+    "novembro": 0.0,
+    "dezembro": 0.0
+  },
+  {
+    "row": 42,
+    "label": "Assinaturas/Anuidades (crédito/mensal)",
+    "julho": 22.92,
+    "agosto": 61.02,
+    "setembro": 37.23,
+    "outubro": 37.23,
+    "novembro": 22.4,
+    "dezembro": 5.9
+  },
+  {
+    "row": 43,
+    "label": "Eletrodomésticos/Móveis",
+    "julho": 0.0,
+    "agosto": 0.0,
+    "setembro": 0.0,
+    "outubro": 0.0,
+    "novembro": 0.0,
+    "dezembro": 0.0
+  },
+  {
+    "row": 44,
+    "label": "Estudos",
+    "julho": 96.99,
+    "agosto": 96.99,
+    "setembro": 96.99,
+    "outubro": 96.99,
+    "novembro": 96.99,
+    "dezembro": 96.99
+  },
+  {
+    "row": 45,
+    "label": "Lazer (limite)",
+    "julho": 684.36,
+    "agosto": 1008.59,
+    "setembro": 1000.0,
+    "outubro": 1000.0,
+    "novembro": 1000.0,
+    "dezembro": 1500.0
+  },
+  {
+    "row": 46,
+    "label": "Presentes",
+    "julho": 61.98,
+    "agosto": 104.68,
+    "setembro": 104.68,
+    "outubro": 104.68,
+    "novembro": 104.68,
+    "dezembro": 0.0
+  },
+  {
+    "row": 47,
+    "label": "Barbeiro",
+    "julho": 76.9,
+    "agosto": 87.9,
+    "setembro": 87.9,
+    "outubro": 87.9,
+    "novembro": 87.9,
+    "dezembro": 87.9
+  },
+  {
+    "row": 48,
+    "label": "Vestuário ",
+    "julho": 251.21,
+    "agosto": 142.95,
+    "setembro": 0.0,
+    "outubro": 0.0,
+    "novembro": 0.0,
+    "dezembro": 0.0
+  },
+  {
+    "row": 49,
+    "label": "Viagens",
+    "julho": 0.0,
+    "agosto": 0.0,
+    "setembro": 0.0,
+    "outubro": 0.0,
+    "novembro": 0.0,
+    "dezembro": 0.0
+  },
+  {
+    "row": 50,
+    "label": "Outros",
+    "julho": "=31.43",
+    "agosto": 0.0,
+    "setembro": 0.0,
+    "outubro": 0.0,
+    "novembro": 0.0,
+    "dezembro": 0.0
+  },
+  {
+    "row": 51,
+    "label": "Estilo de vida",
+    "julho": "=SUM(C39:C50)",
+    "agosto": "=SUM(D39:D50)",
+    "setembro": "=SUM(E39:E50)",
+    "outubro": "=SUM(F39:F50)",
+    "novembro": "=SUM(G39:G50)",
+    "dezembro": "=SUM(H39:H50)"
+  },
+  {
+    "row": 52,
+    "label": "Est. de vida/Receita",
+    "julho": "=C51/C15",
+    "agosto": "=D51/D15",
+    "setembro": "=E51/E15",
+    "outubro": "=F51/F15",
+    "novembro": "=G51/G15",
+    "dezembro": "=H51/H15"
+  },
+  {
+    "row": 53,
+    "label": "INVESTIMENTOS",
+    "julho": null,
+    "agosto": null,
+    "setembro": null,
+    "outubro": null,
+    "novembro": null,
+    "dezembro": null
+  },
+  {
+    "row": 54,
+    "label": "Reserva de emergência",
+    "julho": 1000.0,
+    "agosto": 1200.0,
+    "setembro": 0.0,
+    "outubro": 0.0,
+    "novembro": 0.0,
+    "dezembro": 0.0
+  },
+  {
+    "row": 55,
+    "label": "Pai Obra",
+    "julho": 0.0,
+    "agosto": 0.0,
+    "setembro": 1000.0,
+    "outubro": 1000.0,
+    "novembro": 1000.0,
+    "dezembro": 1000.0
+  },
+  {
+    "row": 56,
+    "label": "Metas financeiras",
+    "julho": 0.0,
+    "agosto": 0.0,
+    "setembro": 0.0,
+    "outubro": 0.0,
+    "novembro": 0.0,
+    "dezembro": 0.0
+  },
+  {
+    "row": 57,
+    "label": "Investimentos",
+    "julho": "=SUM(C54:C56)",
+    "agosto": "=SUM(D54:D56)",
+    "setembro": "=SUM(E54:E56)",
+    "outubro": "=SUM(F54:F56)",
+    "novembro": "=SUM(G54:G56)",
+    "dezembro": "=SUM(H54:H56)"
+  },
+  {
+    "row": 58,
+    "label": "Invest./Receita",
+    "julho": "=C57/C15",
+    "agosto": "=D57/D15",
+    "setembro": "=E57/E15",
+    "outubro": "=F57/F15",
+    "novembro": "=G57/G15",
+    "dezembro": "=H57/H15"
+  },
+  {
+    "row": 59,
+    "label": "SOBRA MENSAL",
+    "julho": "=SUM(C15-C36-C51-C57)",
+    "agosto": "=SUM(D15-D36-D51-D57)",
+    "setembro": "=SUM(E15-E36-E51-E57)",
+    "outubro": "=SUM(F15-F36-F51-F57)",
+    "novembro": "=SUM(G15-G36-G51-G57)",
+    "dezembro": "=SUM(H15-H36-H51-H57)"
+  }
+]

@@ -1,0 +1,812 @@
+{
+  "arquivo": "Victor Orçamento Anual.xlsx",
+  "analisado_em": "2026-09-04T14:17:13.911553",
+  "abas": {
+    "Orçamento 2027": {
+      "dimensoes": "A1:P1033",
+      "max_row": 1033,
+      "max_col": 16,
+      "celulas_com_dados": 695,
+      "total_formulas": 97,
+      "funcoes_utilizadas": {
+        "SUM": 61
+      },
+      "cabecalhos": [],
+      "formulas_amostra": [
+        {
+          "celula": "C15",
+          "formula": "=SUM(C4:C14)",
+          "valor_calculado": "8539.66"
+        },
+        {
+          "celula": "D15",
+          "formula": "=SUM(D4:D14)",
+          "valor_calculado": "8539.66"
+        },
+        {
+          "celula": "E15",
+          "formula": "=SUM(E4:E14)",
+          "valor_calculado": "8539.66"
+        },
+        {
+          "celula": "F15",
+          "formula": "=SUM(F4:F14)",
+          "valor_calculado": "9539.66"
+        },
+        {
+          "celula": "G15",
+          "formula": "=SUM(G4:G14)",
+          "valor_calculado": "8539.66"
+        },
+        {
+          "celula": "H15",
+          "formula": "=SUM(H4:H14)",
+          "valor_calculado": "8002.4"
+        },
+        {
+          "celula": "I15",
+          "formula": "=SUM(I4:I14)",
+          "valor_calculado": "8539.66"
+        },
+        {
+          "celula": "J15",
+          "formula": "=SUM(J4:J14)",
+          "valor_calculado": "8539.66"
+        },
+        {
+          "celula": "K15",
+          "formula": "=SUM(K4:K14)",
+          "valor_calculado": "8539.66"
+        },
+        {
+          "celula": "L15",
+          "formula": "=SUM(L4:L14)",
+          "valor_calculado": "8539.66"
+        },
+        {
+          "celula": "M15",
+          "formula": "=SUM(M4:M14)",
+          "valor_calculado": "8539.66"
+        },
+        {
+          "celula": "N15",
+          "formula": "=SUM(N4:N14)",
+          "valor_calculado": "12483.46"
+        },
+        {
+          "celula": "C35",
+          "formula": "=SUM(C17:C34)",
+          "valor_calculado": "3908.23"
+        },
+        {
+          "celula": "D35",
+          "formula": "=SUM(D17:D34)",
+          "valor_calculado": "3908.23"
+        },
+        {
+          "celula": "E35",
+          "formula": "=SUM(E17:E34)",
+          "valor_calculado": "3908.23"
+        },
+        {
+          "celula": "F35",
+          "formula": "=SUM(F17:F34)",
+          "valor_calculado": "3908.23"
+        },
+        {
+          "celula": "G35",
+          "formula": "=SUM(G17:G34)",
+          "valor_calculado": "3790.59"
+        },
+        {
+          "celula": "H35",
+          "formula": "=SUM(H17:H34)",
+          "valor_calculado": "3550.59"
+        },
+        {
+          "celula": "I35",
+          "formula": "=SUM(I17:I34)",
+          "valor_calculado": "3550.59"
+        },
+        {
+          "celula": "J35",
+          "formula": "=SUM(J17:J34)",
+          "valor_calculado": "3550.59"
+        },
+        {
+          "celula": "K35",
+          "formula": "=SUM(K17:K34)",
+          "valor_calculado": "3550.59"
+        },
+        {
+          "celula": "L35",
+          "formula": "=SUM(L17:L34)",
+          "valor_calculado": "3550.59"
+        },
+        {
+          "celula": "M35",
+          "formula": "=SUM(M17:M34)",
+          "valor_calculado": "3550.59"
+        },
+        {
+          "celula": "N35",
+          "formula": "=SUM(N17:N34)",
+          "valor_calculado": "3718.33"
+        },
+        {
+          "celula": "C36",
+          "formula": "=C35/C15",
+          "valor_calculado": "0.4576563938"
+        },
+        {
+          "celula": "D36",
+          "formula": "=D35/D15",
+          "valor_calculado": "0.4576563938"
+        },
+        {
+          "celula": "E36",
+          "formula": "=E35/E15",
+          "valor_calculado": "0.4576563938"
+        },
+        {
+          "celula": "F36",
+          "formula": "=F35/F15",
+          "valor_calculado": "0.4096823157"
+        },
+        {
+          "celula": "G36",
+          "formula": "=G35/G15",
+          "valor_calculado": "0.4438806697"
+        },
+        {
+          "celula": "H36",
+          "formula": "=H35/H15",
+          "valor_calculado": "0.4436906428"
+        }
+      ]
+    },
+    "Orçamento 2026": {
+      "dimensoes": "A1:U1034",
+      "max_row": 1034,
+      "max_col": 21,
+      "celulas_com_dados": 383,
+      "total_formulas": 57,
+      "funcoes_utilizadas": {
+        "SUM": 31
+      },
+      "cabecalhos": [],
+      "formulas_amostra": [
+        {
+          "celula": "D11",
+          "formula": "=1000+200",
+          "valor_calculado": "1200"
+        },
+        {
+          "celula": "C15",
+          "formula": "=SUM(C4:C14)",
+          "valor_calculado": "9858.58"
+        },
+        {
+          "celula": "D15",
+          "formula": "=SUM(D4:D14)",
+          "valor_calculado": "9178.74"
+        },
+        {
+          "celula": "E15",
+          "formula": "=SUM(E4:E14)",
+          "valor_calculado": "8838.89"
+        },
+        {
+          "celula": "F15",
+          "formula": "=SUM(F4:F14)",
+          "valor_calculado": "7973.89"
+        },
+        {
+          "celula": "G15",
+          "formula": "=SUM(G4:G14)",
+          "valor_calculado": "8538.89"
+        },
+        {
+          "celula": "H15",
+          "formula": "=SUM(H4:H14)",
+          "valor_calculado": "12482.69"
+        },
+        {
+          "celula": "C17",
+          "formula": "=448+31+139",
+          "valor_calculado": "618"
+        },
+        {
+          "celula": "C21",
+          "formula": "=206.97+12.9+16.5+6.49+6.29+4+10.5+6.18",
+          "valor_calculado": "269.83"
+        },
+        {
+          "celula": "C27",
+          "formula": "=544.03+210",
+          "valor_calculado": "754.03"
+        },
+        {
+          "celula": "C29",
+          "formula": "=1271.83+36.39",
+          "valor_calculado": "1308.22"
+        },
+        {
+          "celula": "C34",
+          "formula": "=2240.9+450+150",
+          "valor_calculado": "2840.9"
+        },
+        {
+          "celula": "C35",
+          "formula": "=20+70+140+61.98+45+20",
+          "valor_calculado": "356.98"
+        },
+        {
+          "celula": "C36",
+          "formula": "=SUM(C17:C35)",
+          "valor_calculado": "7574.75"
+        },
+        {
+          "celula": "D36",
+          "formula": "=SUM(D17:D35)",
+          "valor_calculado": "6177.86"
+        },
+        {
+          "celula": "E36",
+          "formula": "=SUM(E17:E35)",
+          "valor_calculado": "4820.43"
+        },
+        {
+          "celula": "F36",
+          "formula": "=SUM(F17:F35)",
+          "valor_calculado": "3960.54"
+        },
+        {
+          "celula": "G36",
+          "formula": "=SUM(G17:G35)",
+          "valor_calculado": "3748.75"
+        },
+        {
+          "celula": "H36",
+          "formula": "=SUM(H17:H35)",
+          "valor_calculado": "3765.97"
+        },
+        {
+          "celula": "C37",
+          "formula": "=C36/C15",
+          "valor_calculado": "0.7683408767"
+        },
+        {
+          "celula": "D37",
+          "formula": "=D36/D15",
+          "valor_calculado": "0.67306188"
+        },
+        {
+          "celula": "E37",
+          "formula": "=E36/E15",
+          "valor_calculado": "0.5453659905"
+        },
+        {
+          "celula": "F37",
+          "formula": "=F36/F15",
+          "valor_calculado": "0.4966885673"
+        },
+        {
+          "celula": "G37",
+          "formula": "=G36/G15",
+          "valor_calculado": "0.4390207627"
+        },
+        {
+          "celula": "H37",
+          "formula": "=H36/H15",
+          "valor_calculado": "0.3016953878"
+        },
+        {
+          "celula": "C50",
+          "formula": "=31.43",
+          "valor_calculado": "31.43"
+        },
+        {
+          "celula": "C51",
+          "formula": "=SUM(C39:C50)",
+          "valor_calculado": "1280.78"
+        },
+        {
+          "celula": "D51",
+          "formula": "=SUM(D39:D50)",
+          "valor_calculado": "1577.12"
+        },
+        {
+          "celula": "E51",
+          "formula": "=SUM(E39:E50)",
+          "valor_calculado": "1381.79"
+        },
+        {
+          "celula": "F51",
+          "formula": "=SUM(F39:F50)",
+          "valor_calculado": "1381.79"
+        }
+      ]
+    },
+    "Orçamento 2024": {
+      "dimensoes": "A1:Y1024",
+      "max_row": 1024,
+      "max_col": 25,
+      "celulas_com_dados": 733,
+      "total_formulas": 189,
+      "funcoes_utilizadas": {
+        "SUM": 48
+      },
+      "cabecalhos": [],
+      "formulas_amostra": [
+        {
+          "celula": "N7",
+          "formula": "=2436.98+34.06",
+          "valor_calculado": "2471.04"
+        },
+        {
+          "celula": "N9",
+          "formula": "=2267.28-105",
+          "valor_calculado": "2162.28"
+        },
+        {
+          "celula": "F10",
+          "formula": "=200+280+160",
+          "valor_calculado": "640"
+        },
+        {
+          "celula": "C11",
+          "formula": "=365.66+2976.61",
+          "valor_calculado": "3342.27"
+        },
+        {
+          "celula": "D12",
+          "formula": "=6637.5-312.5",
+          "valor_calculado": "6325"
+        },
+        {
+          "celula": "E12",
+          "formula": "=4925-2800-312.5-312.5",
+          "valor_calculado": "1500"
+        },
+        {
+          "celula": "F12",
+          "formula": "=500+312.5+53.32+420.02",
+          "valor_calculado": "1285.84"
+        },
+        {
+          "celula": "G12",
+          "formula": "=1362.53+30+15-312.5",
+          "valor_calculado": "1095.03"
+        },
+        {
+          "celula": "H12",
+          "formula": "=100+1517.84",
+          "valor_calculado": "1617.84"
+        },
+        {
+          "celula": "I12",
+          "formula": "=2045.75+500+312.5",
+          "valor_calculado": "2858.25"
+        },
+        {
+          "celula": "J12",
+          "formula": "=500+790.05",
+          "valor_calculado": "1290.05"
+        },
+        {
+          "celula": "M12",
+          "formula": "=600+300",
+          "valor_calculado": "900"
+        },
+        {
+          "celula": "C13",
+          "formula": "=SUM(C4:C12)",
+          "valor_calculado": "8189.2"
+        },
+        {
+          "celula": "D13",
+          "formula": "=SUM(D4:D12)",
+          "valor_calculado": "12196.72"
+        },
+        {
+          "celula": "E13",
+          "formula": "=SUM(E4:E12)",
+          "valor_calculado": "11178.43"
+        },
+        {
+          "celula": "F13",
+          "formula": "=SUM(F4:F12)",
+          "valor_calculado": "9959.3"
+        },
+        {
+          "celula": "G13",
+          "formula": "=SUM(G4:G12)",
+          "valor_calculado": "9136.25"
+        },
+        {
+          "celula": "H13",
+          "formula": "=SUM(H4:H12)",
+          "valor_calculado": "9290.76"
+        },
+        {
+          "celula": "I13",
+          "formula": "=SUM(I4:I12)",
+          "valor_calculado": "9831.73"
+        },
+        {
+          "celula": "J13",
+          "formula": "=SUM(J4:J12)",
+          "valor_calculado": "8122.2"
+        },
+        {
+          "celula": "K13",
+          "formula": "=SUM(K4:K12)",
+          "valor_calculado": "7805.77"
+        },
+        {
+          "celula": "L13",
+          "formula": "=SUM(L4:L12)",
+          "valor_calculado": "9676.56"
+        },
+        {
+          "celula": "M13",
+          "formula": "=SUM(M4:M12)",
+          "valor_calculado": "8434.76"
+        },
+        {
+          "celula": "N13",
+          "formula": "=SUM(N4:N12)",
+          "valor_calculado": "10421.63"
+        },
+        {
+          "celula": "G20",
+          "formula": "=111.97+31",
+          "valor_calculado": "142.97"
+        },
+        {
+          "celula": "D21",
+          "formula": "=48+48+48",
+          "valor_calculado": "144"
+        },
+        {
+          "celula": "E21",
+          "formula": "=192",
+          "valor_calculado": "192"
+        },
+        {
+          "celula": "F26",
+          "formula": "=33.9",
+          "valor_calculado": "33.9"
+        },
+        {
+          "celula": "G26",
+          "formula": "=33.9",
+          "valor_calculado": "33.9"
+        },
+        {
+          "celula": "H26",
+          "formula": "=33.9",
+          "valor_calculado": "33.9"
+        }
+      ]
+    },
+    "COMPARATIVO ANUAL": {
+      "dimensoes": "A1:K986",
+      "max_row": 986,
+      "max_col": 11,
+      "celulas_com_dados": 370,
+      "total_formulas": 24,
+      "funcoes_utilizadas": {
+        "SUM": 24
+      },
+      "cabecalhos": [],
+      "formulas_amostra": [
+        {
+          "celula": "D13",
+          "formula": "=SUM(D5:D12)",
+          "valor_calculado": "94392.56"
+        },
+        {
+          "celula": "E13",
+          "formula": "=SUM(E5:E12)",
+          "valor_calculado": "0.01"
+        },
+        {
+          "celula": "F13",
+          "formula": "=SUM(F5:F12)",
+          "valor_calculado": "0"
+        },
+        {
+          "celula": "G13",
+          "formula": "=SUM(G5:G12)",
+          "valor_calculado": "0"
+        },
+        {
+          "celula": "H13",
+          "formula": "=SUM(H5:H12)",
+          "valor_calculado": "0"
+        },
+        {
+          "celula": "I13",
+          "formula": "=SUM(I5:I12)",
+          "valor_calculado": "0"
+        },
+        {
+          "celula": "D34",
+          "formula": "=SUM(D16:D33)",
+          "valor_calculado": "40281.03"
+        },
+        {
+          "celula": "E34",
+          "formula": "=SUM(E16:E33)",
+          "valor_calculado": "0.01"
+        },
+        {
+          "celula": "F34",
+          "formula": "=SUM(F16:F33)",
+          "valor_calculado": "0"
+        },
+        {
+          "celula": "G34",
+          "formula": "=SUM(G16:G33)",
+          "valor_calculado": "0"
+        },
+        {
+          "celula": "H34",
+          "formula": "=SUM(H16:H33)",
+          "valor_calculado": "0"
+        },
+        {
+          "celula": "I34",
+          "formula": "=SUM(I16:I33)",
+          "valor_calculado": "0"
+        },
+        {
+          "celula": "D51",
+          "formula": "=SUM(D37:D50)",
+          "valor_calculado": "38639.09"
+        },
+        {
+          "celula": "E51",
+          "formula": "=SUM(E37:E50)",
+          "valor_calculado": "0.01"
+        },
+        {
+          "celula": "F51",
+          "formula": "=SUM(F37:F50)",
+          "valor_calculado": "0"
+        },
+        {
+          "celula": "G51",
+          "formula": "=SUM(G37:G50)",
+          "valor_calculado": "0"
+        },
+        {
+          "celula": "H51",
+          "formula": "=SUM(H37:H50)",
+          "valor_calculado": "0"
+        },
+        {
+          "celula": "I51",
+          "formula": "=SUM(I37:I50)",
+          "valor_calculado": "0"
+        },
+        {
+          "celula": "D58",
+          "formula": "=SUM(D54:D57)",
+          "valor_calculado": "1450"
+        },
+        {
+          "celula": "E58",
+          "formula": "=SUM(E54:E57)",
+          "valor_calculado": "0.01"
+        },
+        {
+          "celula": "F58",
+          "formula": "=SUM(F54:F57)",
+          "valor_calculado": "0"
+        },
+        {
+          "celula": "G58",
+          "formula": "=SUM(G54:G57)",
+          "valor_calculado": "0"
+        },
+        {
+          "celula": "H58",
+          "formula": "=SUM(H54:H57)",
+          "valor_calculado": "0"
+        },
+        {
+          "celula": "I58",
+          "formula": "=SUM(I54:I57)",
+          "valor_calculado": "0"
+        }
+      ]
+    },
+    "CARTAO AGOSTO": {
+      "dimensoes": "A1:X1064",
+      "max_row": 1064,
+      "max_col": 24,
+      "celulas_com_dados": 599,
+      "total_formulas": 2,
+      "funcoes_utilizadas": {
+        "SUM": 2
+      },
+      "cabecalhos": [],
+      "formulas_amostra": [
+        {
+          "celula": "C88",
+          "formula": "=SUM(C4:C87)",
+          "valor_calculado": "5425.71"
+        },
+        {
+          "celula": "D88",
+          "formula": "=SUM(D4:D87)",
+          "valor_calculado": "5425.71"
+        }
+      ]
+    },
+    "ReceberPagar": {
+      "dimensoes": "A1:Z959",
+      "max_row": 959,
+      "max_col": 26,
+      "celulas_com_dados": 8,
+      "total_formulas": 0,
+      "funcoes_utilizadas": {},
+      "cabecalhos": [],
+      "formulas_amostra": []
+    },
+    "Investimentos": {
+      "dimensoes": "A1:AB1001",
+      "max_row": 1001,
+      "max_col": 28,
+      "celulas_com_dados": 36,
+      "total_formulas": 9,
+      "funcoes_utilizadas": {
+        "SUM": 4
+      },
+      "cabecalhos": [
+        " "
+      ],
+      "formulas_amostra": [
+        {
+          "celula": "H4",
+          "formula": "=G4-L4",
+          "valor_calculado": "26582.66"
+        },
+        {
+          "celula": "K4",
+          "formula": "=J4-I4",
+          "valor_calculado": "0"
+        },
+        {
+          "celula": "L4",
+          "formula": "=I4+K4",
+          "valor_calculado": "3417.34"
+        },
+        {
+          "celula": "K5",
+          "formula": "=J5-I5",
+          "valor_calculado": "0"
+        },
+        {
+          "celula": "L5",
+          "formula": "=I5+K5",
+          "valor_calculado": "0"
+        },
+        {
+          "celula": "I6",
+          "formula": "=SUM(I4:I5)",
+          "valor_calculado": "3417.34"
+        },
+        {
+          "celula": "J6",
+          "formula": "=SUM(J4:J5)",
+          "valor_calculado": "3417.34"
+        },
+        {
+          "celula": "K6",
+          "formula": "=SUM(K4:K5)",
+          "valor_calculado": "0"
+        },
+        {
+          "celula": "L6",
+          "formula": "=SUM(L4:L5)",
+          "valor_calculado": "3417.34"
+        }
+      ]
+    },
+    "Metas e Desejos": {
+      "dimensoes": "A1:W990",
+      "max_row": 990,
+      "max_col": 23,
+      "celulas_com_dados": 381,
+      "total_formulas": 11,
+      "funcoes_utilizadas": {
+        "IF": 4,
+        "COUNT": 8,
+        "COUNTIF": 4,
+        "COUNTA": 4
+      },
+      "cabecalhos": [],
+      "formulas_amostra": [
+        {
+          "celula": "U5",
+          "formula": "=W5+W7",
+          "valor_calculado": "13"
+        },
+        {
+          "celula": "W5",
+          "formula": "=COUNTIF(Q5:Q70,\"TRUE\")",
+          "valor_calculado": "12"
+        },
+        {
+          "celula": "U6",
+          "formula": "=W6+W8",
+          "valor_calculado": "35"
+        },
+        {
+          "celula": "W6",
+          "formula": "=COUNTA(Q5:Q70)-W5",
+          "valor_calculado": "21"
+        },
+        {
+          "celula": "U7",
+          "formula": "=W9+W11",
+          "valor_calculado": "10"
+        },
+        {
+          "celula": "W7",
+          "formula": "=COUNTIF(J5:J50,\"TRUE\")",
+          "valor_calculado": "1"
+        },
+        {
+          "celula": "W8",
+          "formula": "=COUNTA(J5:J50)-W7",
+          "valor_calculado": "14"
+        },
+        {
+          "celula": "W9",
+          "formula": "=COUNTIF(K5:K50,\"TRUE\")",
+          "valor_calculado": "5"
+        },
+        {
+          "celula": "W10",
+          "formula": "=COUNTA(K5:K50)-W9",
+          "valor_calculado": "10"
+        },
+        {
+          "celula": "W11",
+          "formula": "=COUNTIF(R5:R70,\"TRUE\")",
+          "valor_calculado": "5"
+        },
+        {
+          "celula": "W12",
+          "formula": "=COUNTA(R5:R70)-W11",
+          "valor_calculado": "28"
+        }
+      ]
+    },
+    "Costumizaçao": {
+      "dimensoes": "A1:W1031",
+      "max_row": 1031,
+      "max_col": 23,
+      "celulas_com_dados": 70,
+      "total_formulas": 1,
+      "funcoes_utilizadas": {
+        "SUM": 1
+      },
+      "cabecalhos": [
+        " "
+      ],
+      "formulas_amostra": [
+        {
+          "celula": "D43",
+          "formula": "=SUM(D39:D42)",
+          "valor_calculado": "9175.69"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Victor Finanças — Orçamento Anual & Gestão Patrimonial</title>
+  <meta name="description" content="Dashboard financeiro inteligente e refinado, integrado com orçamentos anuais, cartões, metas e investimentos. Pronto para HostGator.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.firebaseio.com https://*.googleapis.com wss://*.firebaseio.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com; img-src 'self' data: https:;">
+
+  <!-- Fontes do Google -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Chart.js para Gráficos Interativos -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <!-- Estilos Customizados -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Overlay para Mobile Drawer -->
+  <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+  <!-- Sidebar Lateral -->
+  <aside class="sidebar" id="appSidebar">
+    <div class="brand">
+      <div class="brand-icon">💎</div>
+      <div class="brand-text">
+        <h2>Victor Finanças</h2>
+        <span>Orçamento & Gestão</span>
+      </div>
+    </div>
+
+    <ul class="nav-links">
+      <li class="nav-item active" data-tab="dashboard">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+        <span>Visão Geral</span>
+      </li>
+      <li class="nav-item" data-tab="novo-lancamento">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        <span>Novo Lançamento</span>
+      </li>
+      <li class="nav-item" data-tab="cartao">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        <span>Cartão de Crédito</span>
+      </li>
+      <li class="nav-item" data-tab="investimentos">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        <span>Investimentos</span>
+      </li>
+      <li class="nav-item" data-tab="metas">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <span>Metas & Desejos</span>
+      </li>
+      <li class="nav-item" data-tab="comparativo">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        <span>Comparativo Anual</span>
+      </li>
+      <li class="nav-item" data-tab="config">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Backup & HostGator</span>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <div class="hostgator-badge">
+        <span>⚡ HostGator Ready</span>
+      </div>
+      <div>Dados sincronizados localmente</div>
+    </div>
+  </aside>
+
+  <!-- Conteúdo Principal -->
+  <div class="main-wrapper">
+    <!-- Cabeçalho Topo -->
+    <header class="top-header">
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <button id="btnHamburger" class="hamburger-btn" aria-label="Abrir Menu">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div class="header-left">
+          <h1>Painel Financeiro</h1>
+          <p>Visão executiva e controle em tempo real dos seus recursos</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <!-- Perfil do Usuário & Sincronização Cloud -->
+        <div id="userProfileChip" class="user-profile-chip" style="display: none;">
+          <div class="user-avatar" id="userAvatar">V</div>
+          <div class="user-details">
+            <span class="user-name" id="userName">Victor</span>
+            <span class="sync-status-badge">
+              <span class="sync-dot" id="syncDot"></span>
+              <span id="syncText">Sincronizado</span>
+            </span>
+          </div>
+          <button id="btnLogout" class="btn-logout" title="Sair da Conta">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          </button>
+        </div>
+
+        <label for="yearSelect" style="font-size: 13px; color: var(--text-secondary); margin-left: 6px;">Ano:</label>
+        <select id="yearSelect" class="year-selector">
+          <option value="2026">Orçamento 2026</option>
+          <option value="2027">Orçamento 2027</option>
+        </select>
+
+        <button id="btnExportExcelTop" class="btn btn-secondary" style="font-size: 12px; padding: 8px 14px; background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.4); color: #34d399; font-weight: 600; display: flex; align-items: center; gap: 6px;" title="Exportar Planilha Excel Completa com dados atualizados">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          Exportar Planilha (.xlsx)
+        </button>
+
+        <button class="btn btn-primary" onclick="document.querySelector('[data-tab=novo-lancamento]').click()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          + Novo Gasto
+        </button>
+      </div>
+    </header>
+
+    <!-- ABA 1: VISÃO GERAL & ORÇAMENTO -->
+    <main id="tab-dashboard" class="tab-content active">
+
+      <!-- 1. CARDS DOS 4 CARTÕES DE CRÉDITO (FATURA DO MÊS ATUAL) -->
+      <div style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <h3 style="font-size: 15px; font-weight: 700; color: #f8fafc;">💳 Faturas do Mês Atual por Cartão</h3>
+          <span style="font-size: 12px; color: var(--text-muted);">(Aba Cartão Agosto — Total: R$ 5.425,71)</span>
+        </div>
+        <span class="tag" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3);">
+          4 Cartões Estabelecidos
+        </span>
+      </div>
+
+      <div class="cards-grid-4">
+        <!-- Card 1: BB -->
+        <div class="card-credit-mini bb-card">
+          <div class="card-credit-header">
+            <span class="card-badge bb">🟡 Banco do Brasil</span>
+            <span class="card-flag" id="card-bb-count">62 compras</span>
+          </div>
+          <div class="card-credit-value" id="card-bb-val">R$ 2.980,50</div>
+          <div class="card-credit-footer">
+            <span>Fatura Aberta</span>
+            <span class="card-pct" id="card-bb-pct">54.9%</span>
+          </div>
+        </div>
+
+        <!-- Card 2: Itaú -->
+        <div class="card-credit-mini itau-card">
+          <div class="card-credit-header">
+            <span class="card-badge itau">🟠 Itaú Uniclass</span>
+            <span class="card-flag" id="card-itau-count">19 compras</span>
+          </div>
+          <div class="card-credit-value" id="card-itau-val">R$ 2.292,09</div>
+          <div class="card-credit-footer">
+            <span>Fatura Aberta</span>
+            <span class="card-pct" id="card-itau-pct">42.2%</span>
+          </div>
+        </div>
+
+        <!-- Card 3: Empório Alex -->
+        <div class="card-credit-mini emporio-card">
+          <div class="card-credit-header">
+            <span class="card-badge emporio">🛍️ Empório Alex</span>
+            <span class="card-flag" id="card-emporio-count">1 compra</span>
+          </div>
+          <div class="card-credit-value" id="card-emporio-val">R$ 104,68</div>
+          <div class="card-credit-footer">
+            <span>Fatura Aberta</span>
+            <span class="card-pct" id="card-emporio-pct">1.9%</span>
+          </div>
+        </div>
+
+        <!-- Card 4: Nubank -->
+        <div class="card-credit-mini nubank-card">
+          <div class="card-credit-header">
+            <span class="card-badge nubank">💜 Nubank Roxinho</span>
+            <span class="card-flag" id="card-nubank-count">2 compras</span>
+          </div>
+          <div class="card-credit-value" id="card-nubank-val">R$ 48,44</div>
+          <div class="card-credit-footer">
+            <span>Fatura Aberta</span>
+            <span class="card-pct" id="card-nubank-pct">0.9%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. SOBRA MENSAL ATUAL & GRÁFICO DE ACOMPANHAMENTO DE LIMITES (ORÇAMENTO ANUAL) -->
+      <div class="limits-grid">
+        
+        <!-- Card A: Sobra Mensal Atual & Médias dos Meses Futuros -->
+        <div class="kpi-card monthly-surplus-card">
+          <div class="kpi-header">
+            <div>
+              <span class="kpi-title" style="color: #34d399; font-weight: 700;">💵 Sobra Mensal Atual</span>
+              <div style="font-size: 11px; color: var(--text-secondary); margin-top: 2px;" id="lblCurrentMonth">Mês Vigente (Agosto)</div>
+            </div>
+            <div class="kpi-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">✨</div>
+          </div>
+
+          <div class="kpi-value" id="currentMonthlySurplus" style="font-size: 32px; color: #10b981; margin: 8px 0 4px 0;">
+            R$ 223,76
+          </div>
+          <div class="kpi-sub" style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 8px;">
+            <span>Média de sobra acumulada:</span>
+            <strong id="avgMonthlySurplus" style="color: #ffffff;">R$ 1.981,53 / mês</strong>
+          </div>
+
+          <!-- Mini Resumo do Mês Vigente -->
+          <div class="monthly-breakdown-mini">
+            <div class="m-item">
+              <span>Receita do Mês</span>
+              <strong id="mRecVal" style="color: #10b981;">R$ 9.178,74</strong>
+            </div>
+            <div class="m-item">
+              <span>Fixas Pagas</span>
+              <strong id="mFixVal" style="color: #f87171;">R$ 6.177,86</strong>
+            </div>
+            <div class="m-item">
+              <span>Variáveis</span>
+              <strong id="mVarVal" style="color: #fbbf24;">R$ 1.577,12</strong>
+            </div>
+            <div class="m-item">
+              <span>Investimentos</span>
+              <strong id="mInvVal" style="color: #60a5fa;">R$ 1.200,00</strong>
+            </div>
+          </div>
+
+          <!-- Box de Médias dos Meses Futuros (Setembro a Dezembro) -->
+          <div style="margin-top: 12px; padding: 10px 12px; background: rgba(15, 23, 42, 0.6); border: 1px dashed rgba(59, 130, 246, 0.3); border-radius: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span style="font-size: 11px; font-weight: 700; color: #60a5fa; text-transform: uppercase; letter-spacing: 0.5px;">🔮 Médias Próximos Meses (Set–Dez)</span>
+              <span style="font-size: 10px; color: var(--text-muted);" id="lblFutureMonthsRange">4 meses</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; text-align: center;">
+              <div style="background: rgba(255,255,255,0.02); padding: 5px; border-radius: 6px;">
+                <div style="font-size: 9px; color: var(--text-muted); text-transform: uppercase;">Ganhos Médios</div>
+                <strong id="futAvgIncome" style="font-size: 11px; color: #34d399;">R$ 9.458,59</strong>
+              </div>
+              <div style="background: rgba(255,255,255,0.02); padding: 5px; border-radius: 6px;">
+                <div style="font-size: 9px; color: var(--text-muted); text-transform: uppercase;">Gastos Médios</div>
+                <strong id="futAvgExpenses" style="font-size: 11px; color: #f87171;">R$ 5.543,00</strong>
+              </div>
+              <div style="background: rgba(255,255,255,0.02); padding: 5px; border-radius: 6px;">
+                <div style="font-size: 9px; color: var(--text-muted); text-transform: uppercase;">Sobra Média</div>
+                <strong id="futAvgSurplus" style="font-size: 11px; color: #38bdf8;">R$ 2.915,59</strong>
+              </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 10px; margin-top: 6px; padding-top: 4px; border-top: 1px solid rgba(255,255,255,0.05);">
+              <span style="color: var(--text-secondary);">Sobra Acumulada Prevista (I59):</span>
+              <strong id="futTotalSurplus" style="color: #fbbf24; font-weight: 700;">R$ 11.886,11</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card B: Gráfico de Limites Estabelecidos Orçamento Anual -->
+        <div class="limits-chart-card">
+          <div class="chart-header" style="margin-bottom: 8px;">
+            <div>
+              <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 2px;">🎯 Limites Orçados vs Gastos Reais</h3>
+              <p style="font-size: 11px; color: var(--text-secondary);">Tetos e médias estabelecidas por categoria no Orçamento Anual</p>
+            </div>
+            <span class="badge-status-limit" id="limitStatusBadge">🛡️ Dentro do Teto</span>
+          </div>
+
+          <div class="chart-body" style="height: 175px; position: relative;">
+            <canvas id="limitsComparisonChart"></canvas>
+          </div>
+
+          <div class="limits-pills-row" id="limitsPillsRow">
+            <!-- Pílulas de progresso por categoria geradas via JS -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Título de Seção: Totais Anuais Acumulados -->
+      <div style="margin: 6px 0 14px 0;">
+        <h3 style="font-size: 14px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">
+          📊 Orçamento Anual Consolidado
+        </h3>
+      </div>
+
+      <!-- Grid de KPIs Principais -->
+      <div class="kpi-grid">
+        <div class="kpi-card kpi-income">
+          <div class="kpi-header">
+            <span class="kpi-title">Receitas Totais</span>
+            <div class="kpi-icon">💰</div>
+          </div>
+          <div class="kpi-value" id="kpi-receita">R$ 0,00</div>
+          <div class="kpi-sub">Total anual orçado</div>
+        </div>
+
+        <div class="kpi-card kpi-fixed">
+          <div class="kpi-header">
+            <span class="kpi-title">Despesas Fixas</span>
+            <div class="kpi-icon">🏠</div>
+          </div>
+          <div class="kpi-value" id="kpi-fixa">R$ 0,00</div>
+          <div class="kpi-sub">
+            <span class="badge-pct" id="badge-fixa">0%</span>
+            <span>da receita anual</span>
+          </div>
+        </div>
+
+        <div class="kpi-card kpi-variable">
+          <div class="kpi-header">
+            <span class="kpi-title">Despesas Variáveis</span>
+            <div class="kpi-icon">🛍️</div>
+          </div>
+          <div class="kpi-value" id="kpi-variavel">R$ 0,00</div>
+          <div class="kpi-sub">
+            <span class="badge-pct" id="badge-variavel">0%</span>
+            <span>estilo de vida / cartão</span>
+          </div>
+        </div>
+
+        <div class="kpi-card kpi-invest">
+          <div class="kpi-header">
+            <span class="kpi-title">Investimentos</span>
+            <div class="kpi-icon">📈</div>
+          </div>
+          <div class="kpi-value" id="kpi-invest">R$ 0,00</div>
+          <div class="kpi-sub">
+            <span class="badge-pct" id="badge-invest">0%</span>
+            <span>aportes acumulados</span>
+          </div>
+        </div>
+
+        <div class="kpi-card kpi-balance">
+          <div class="kpi-header">
+            <span class="kpi-title">Sobra Líquida</span>
+            <div class="kpi-icon">✨</div>
+          </div>
+          <div class="kpi-value" id="kpi-sobra">R$ 0,00</div>
+          <div class="kpi-sub">Economia projetada no ano</div>
+        </div>
+      </div>
+
+      <!-- Gráficos de Fluxo de Caixa e Distribuição -->
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Fluxo de Caixa Mensal (Receitas vs Despesas)</h3>
+          </div>
+          <div class="chart-body">
+            <canvas id="cashFlowChart"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Distribuição Percentual dos Recursos</h3>
+          </div>
+          <div class="chart-body">
+            <canvas id="distributionChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabela Detalhada de Orçamento Mês a Mês -->
+      <div class="table-container">
+        <div class="table-header-flex">
+          <h3>Detalhamento Mensal do Orçamento</h3>
+          <span style="font-size: 12px; color: var(--text-muted);">Calculado segundo as fórmulas da planilha (C15, C35, C50, C57 e C59)</span>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Mês</th>
+              <th>Receitas</th>
+              <th>Despesas Fixas</th>
+              <th>Despesas Variáveis</th>
+              <th>Investimentos</th>
+              <th>Sobra Líquida</th>
+            </tr>
+          </thead>
+          <tbody id="monthlyBudgetTbody">
+            <!-- Gerado via JS -->
+          </tbody>
+        </table>
+      </div>
+    </main>
+
+    <!-- ABA 2: NOVO LANÇAMENTO -->
+    <section id="tab-novo-lancamento" class="tab-content">
+      <div class="form-card">
+        <div style="margin-bottom: 24px; text-align: center;">
+          <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 6px;">Adicionar Lançamento Rápido</h2>
+          <p style="font-size: 13px; color: var(--text-secondary);">Cadastre despesas ou receitas e veja a atualização instantânea nos gráficos e no saldo anual.</p>
+        </div>
+
+        <form id="formNewEntry">
+          <div class="form-grid">
+            <div class="form-group full-width">
+              <label for="entryDesc">Descrição do Lançamento</label>
+              <input type="text" id="entryDesc" placeholder="Ex: Supermercado Semanal, Aluguel, Salário Extra..." required>
+            </div>
+
+            <div class="form-group">
+              <label for="entryValue">Valor (R$)</label>
+              <input type="number" id="entryValue" step="0.01" min="0.01" placeholder="Ex: 350.00" required>
+            </div>
+
+            <div class="form-group">
+              <label for="entryType">Tipo de Movimentação</label>
+              <select id="entryType">
+                <option value="variavel">Despesa Variável (Dia a dia / Cartão)</option>
+                <option value="fixa">Despesa Fixa (Moradia / Contas)</option>
+                <option value="receita">Receita (Entrada / Salário / Extra)</option>
+                <option value="invest">Investimento (Aporte / Poupança)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="entryCategory">Categoria</label>
+              <select id="entryCategory">
+                <option value="Alimentação">Alimentação & Supermercado</option>
+                <option value="Moradia">Moradia & Aluguel</option>
+                <option value="Transporte">Transporte & Combustível</option>
+                <option value="Contas">Contas & Energia/Internet</option>
+                <option value="Lazer">Lazer, Restaurantes & Delivery</option>
+                <option value="Saúde">Saúde & Farmácia</option>
+                <option value="Salário">Salário / Remuneração Principal</option>
+                <option value="Investimentos">Aporte Financeiro / Tesouro</option>
+                <option value="Outros">Outros Gastos</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="entryPaymentMethod">Cartão / Forma de Pagamento</label>
+              <select id="entryPaymentMethod">
+                <option value="C/C BB">🟡 Cartão Banco do Brasil</option>
+                <option value="C/C Itaú">🟠 Cartão Itaú Uniclass</option>
+                <option value="C/C Nubank">💜 Cartão Nubank</option>
+                <option value="C/C Empório Alex">🛍️ Cartão Empório Alex</option>
+                <option value="PIX">💠 PIX / Débito em Conta</option>
+                <option value="Boleto">📄 Boleto Bancário</option>
+                <option value="Dinheiro">💵 Dinheiro / Espécie</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="entryDate">Data</label>
+              <input type="date" id="entryDate">
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 14px;">
+            Salvar Lançamento
+          </button>
+        </form>
+      </div>
+
+      <!-- Histórico de Últimos Lançamentos -->
+      <div class="table-container">
+        <div class="table-header-flex">
+          <h3>Histórico de Lançamentos Recentes</h3>
+          <span style="font-size: 12px; color: var(--text-muted);">Filtrado e ordenado cronologicamente</span>
+        </div>
+
+        <!-- Barra de Busca & Filtros -->
+        <div class="filter-bar">
+          <input type="text" id="transactionSearch" class="search-input" placeholder="Buscar por descrição...">
+          <select id="transactionFilterCategory" class="filter-select">
+            <option value="">Todas as Categorias</option>
+          </select>
+          <select id="transactionFilterType" class="filter-select">
+            <option value="">Todos os Tipos</option>
+            <option value="fixa">Despesa Fixa</option>
+            <option value="variavel">Despesa Variável</option>
+            <option value="receita">Receita</option>
+            <option value="invest">Investimento</option>
+          </select>
+          <button id="btnExportCSV" class="btn btn-secondary" style="padding: 9px 14px; font-size: 12px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Exportar CSV
+          </button>
+          <button id="btnExportExcelTable" class="btn btn-secondary" style="padding: 9px 14px; font-size: 12px; background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.4); color: #34d399; font-weight: 600;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            Exportar Excel (.xlsx)
+          </button>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Descrição</th>
+              <th>Tipo</th>
+              <th>Categoria</th>
+              <th>Valor</th>
+              <th style="text-align: right;">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="transactionsTbody">
+            <!-- Gerado via JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ABA 3: CARTÃO DE CRÉDITO -->
+    <section id="tab-cartao" class="tab-content">
+      <div class="kpi-grid">
+        <div class="kpi-card kpi-variable">
+          <div class="kpi-header">
+            <span class="kpi-title">Fatura Atual (Agosto)</span>
+            <div class="kpi-icon">💳</div>
+          </div>
+          <div class="kpi-value" id="cardInvoiceTotal">R$ 5.425,71</div>
+          <div class="kpi-sub" id="cardInvoiceCount">7 itens lançados</div>
+        </div>
+
+        <div class="kpi-card kpi-income">
+          <div class="kpi-header">
+            <span class="kpi-title">Limite Disponível</span>
+            <div class="kpi-icon">🛡️</div>
+          </div>
+          <div class="kpi-value">R$ 12.000,00</div>
+          <div class="kpi-sub">Teto de crédito saudável</div>
+        </div>
+
+        <div class="kpi-card kpi-invest">
+          <div class="kpi-header">
+            <span class="kpi-title">Vencimento da Fatura</span>
+            <div class="kpi-icon">📅</div>
+          </div>
+          <div class="kpi-value" style="font-size: 20px;">05/09/2026</div>
+          <div class="kpi-sub">Fechamento: 25/08/2026</div>
+        </div>
+      </div>
+
+      <!-- Inserir Compra no Cartão -->
+      <div class="form-card" style="margin-bottom: 24px;">
+        <h3 style="margin-bottom: 16px; font-size: 16px;">Adicionar Lançamento no Cartão</h3>
+        <form id="formNewCardPurchase">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="cardOQue">O que? (Assunto / Categoria do Orçamento)</label>
+              <select id="cardOQue" required>
+                <option value="Alimentação trabalho (limite)">Alimentação trabalho (limite)</option>
+                <option value="Combustível (limite)">Combustível (limite)</option>
+                <option value="Estacionamento (limite)">Estacionamento (limite)</option>
+                <option value="Mercado (limite)">Mercado (limite)</option>
+                <option value="Uber / Transporte (limite)">Uber / Transporte (limite)</option>
+                <option value="Lazer (limite)">Lazer (limite)</option>
+                <option value="Obra">Obra</option>
+                <option value="Manutenção carro">Manutenção carro</option>
+                <option value="Vestuário">Vestuário</option>
+                <option value="Presentes">Presentes</option>
+                <option value="Despesas casa">Despesas casa</option>
+                <option value="Farmácia">Farmácia</option>
+                <option value="Estudos">Estudos</option>
+                <option value="Artigos/Eletrônicos">Artigos/Eletrônicos</option>
+                <option value="Assinaturas/Anuidades">Assinaturas/Anuidades</option>
+                <option value="Academia (mensal)">Academia (mensal)</option>
+                <option value="Barbeiro">Barbeiro</option>
+                <option value="Alice (gastos extras)">Alice (gastos extras)</option>
+                <option value="Outros">Outros</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="cardMotivo">Motivo / Descrição</label>
+              <input type="text" id="cardMotivo" placeholder="Ex: Almoço, Gympass, ICLOUD, Netflix, Cafe..." required>
+            </div>
+
+            <div class="form-group">
+              <label for="cardValor">Valor Parcela / Eu pago (R$)</label>
+              <input type="number" id="cardValor" step="0.01" min="0.01" placeholder="Ex: 8.96" required>
+            </div>
+
+            <div class="form-group">
+              <label for="cardBanco">Cartão</label>
+              <select id="cardBanco">
+                <option value="C/C BB">🟡 C/C Banco do Brasil</option>
+                <option value="C/C Itaú">🟠 C/C Itaú</option>
+                <option value="C/C Nubank">💜 C/C Nubank</option>
+                <option value="C/C Empório Alex">🛍️ C/C Empório Alex</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="cardParcAtual">Parcela Atual</label>
+              <input type="number" id="cardParcAtual" value="1" min="1">
+            </div>
+
+            <div class="form-group">
+              <label for="cardNumParc">Nº de Parcelas</label>
+              <input type="number" id="cardNumParc" value="1" min="1">
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="margin-top: 14px; padding: 12px 24px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Salvar Lançamento no Cartão
+          </button>
+        </form>
+      </div>
+
+      <!-- Tabela de Compras no Cartão -->
+      <div class="table-container">
+        <div class="table-header-flex">
+          <div>
+            <h3>Lançamentos da Fatura de Agosto</h3>
+            <span style="font-size: 12px; color: var(--text-muted);">Vínculo direto com as categorias do Orçamento Anual</span>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <select id="filterCardByBank" class="filter-select" style="font-size: 12px; padding: 6px 12px;">
+              <option value="">Todos os Cartões</option>
+              <option value="C/C BB">Banco do Brasil</option>
+              <option value="C/C Itaú">Itaú</option>
+              <option value="C/C Nubank">Nubank</option>
+              <option value="C/C Empório Alex">Empório Alex</option>
+            </select>
+          </div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>O que? (Orçamento)</th>
+              <th>Eu pago (R$)</th>
+              <th>Parcela</th>
+              <th>Motivo</th>
+              <th>Cartão</th>
+              <th style="text-align: right;">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="cardPurchasesTbody">
+            <!-- Gerado via JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ABA 4: INVESTIMENTOS -->
+    <section id="tab-investimentos" class="tab-content">
+      <div class="kpi-grid">
+        <div class="kpi-card kpi-invest">
+          <div class="kpi-header">
+            <span class="kpi-title">Patrimônio Investido</span>
+            <div class="kpi-icon">💎</div>
+          </div>
+          <div class="kpi-value" id="investPatrimonio">R$ 26.582,66</div>
+          <div class="kpi-sub">Total acumulado na carteira</div>
+        </div>
+
+        <div class="kpi-card kpi-income">
+          <div class="kpi-header">
+            <span class="kpi-title">Aportes Recentes</span>
+            <div class="kpi-icon">📥</div>
+          </div>
+          <div class="kpi-value" id="investAportes">R$ 3.417,34</div>
+          <div class="kpi-sub">Total alocado no último ciclo</div>
+        </div>
+
+        <div class="kpi-card kpi-balance">
+          <div class="kpi-header">
+            <span class="kpi-title">Rentabilidade Estimada</span>
+            <div class="kpi-icon">⚡</div>
+          </div>
+          <div class="kpi-value" id="investRentabilidade">11.45% a.a.</div>
+          <div class="kpi-sub">Acima do CDI médio</div>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <div class="table-header-flex">
+          <h3>Alocação por Ativo / Classe</h3>
+          <span style="font-size: 12px; color: var(--text-muted);">Mapeado da aba Investimentos</span>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Ativo / Título</th>
+              <th>Classe</th>
+              <th>Valor Alocado</th>
+              <th>Participação na Carteira</th>
+            </tr>
+          </thead>
+          <tbody id="investmentsTbody">
+            <!-- Gerado via JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ABA 5: METAS & DESEJOS -->
+    <section id="tab-metas" class="tab-content">
+      <div class="chart-card" style="margin-bottom: 24px;">
+        <div class="chart-header">
+          <h3>Progresso Geral das Metas</h3>
+          <span id="goalsSummary" style="font-size: 13px; color: var(--color-income); font-weight: 600;">0 de 0 concluídas</span>
+        </div>
+        <div class="progress-bar" style="height: 12px;">
+          <div class="progress-fill" id="goalsProgressBar" style="width: 0%;"></div>
+        </div>
+        <p style="font-size: 12px; color: var(--text-muted); margin-top: 8px;">
+          Calculado com a lógica de <code>COUNTIF(..., "TRUE") / COUNTA(...)</code> da aba <strong>Metas e Desejos</strong> da planilha.
+        </p>
+      </div>
+
+      <!-- Inserir Nova Meta -->
+      <div class="form-card" style="margin-bottom: 24px;">
+        <h3 style="margin-bottom: 14px; font-size: 16px;">Criar Nova Meta ou Desejo</h3>
+        <form id="formNewGoal" style="display: flex; gap: 12px;">
+          <input type="text" id="goalDesc" placeholder="Ex: Viagem de fim de ano, Reserva 12 meses..." style="flex: 2;" required>
+          <select id="goalCategory" style="flex: 1;">
+            <option value="Patrimônio">Patrimônio</option>
+            <option value="Investimentos">Investimentos</option>
+            <option value="Lazer">Lazer & Viagens</option>
+            <option value="Segurança">Segurança</option>
+            <option value="Trabalho">Trabalho</option>
+            <option value="Orçamento">Orçamento</option>
+          </select>
+          <button type="submit" class="btn btn-primary">+ Adicionar</button>
+        </form>
+      </div>
+
+      <!-- Lista de Metas Interativa -->
+      <div class="table-container">
+        <h3 style="margin-bottom: 16px;">Checklist de Metas</h3>
+        <div id="goalsListContainer" class="goals-list">
+          <!-- Gerado via JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ABA 6: COMPARATIVO ANUAL -->
+    <section id="tab-comparativo" class="tab-content">
+      <div class="chart-card" style="margin-bottom: 24px;">
+        <div class="chart-header">
+          <h3>Comparativo de Médias & Totais Multi-Anual</h3>
+          <span style="font-size: 12px; color: var(--text-muted);">Aba COMPARATIVO ANUAL da planilha (2024 vs 2026 vs 2027)</span>
+        </div>
+        <div class="chart-body">
+          <canvas id="annualComparisonChart"></canvas>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <h3 style="margin-bottom: 16px;">Tabela Comparativa Consolidada</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Exercício</th>
+              <th>Receitas Totais</th>
+              <th>Custos Fixos</th>
+              <th>Despesas Variáveis</th>
+              <th>Investimentos</th>
+              <th>Sobra Líquida Acumulada</th>
+            </tr>
+          </thead>
+          <tbody id="comparisonTbody">
+            <!-- Gerado via JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ABA 7: CONFIGURAÇÕES, BACKUP & HOSTGATOR -->
+    <section id="tab-config" class="tab-content">
+      <div class="form-card" style="max-width: 800px;">
+        <h2 style="margin-bottom: 14px; font-size: 20px;">Backup & Sincronização</h2>
+        <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 24px;">
+          Seus dados estão armazenados com segurança no seu navegador. Faça backups periódicos para garantir a preservação de novos lançamentos ou migração de dispositivos.
+        </p>
+
+        <div style="display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 30px;">
+          <button id="btnExportExcelConfig" class="btn btn-primary" style="background: #10b981; border-color: #059669;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            Exportar Planilha Excel (.xlsx)
+          </button>
+
+          <button id="btnExportBackup" class="btn btn-secondary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Exportar Backup JSON
+          </button>
+
+          <label class="btn btn-secondary" style="cursor: pointer;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Importar Backup JSON
+            <input type="file" id="fileInputImport" accept=".json" style="display: none;">
+          </label>
+
+          <button id="btnResetData" class="btn btn-secondary" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.3);">
+            Restaurar Planilha Original
+          </button>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid var(--border-color); margin-bottom: 24px;">
+
+        <h3 style="font-size: 16px; margin-bottom: 12px; color: #f59e0b;">🌐 Instruções de Deploy na HostGator</h3>
+        <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 16px;">
+          Este site é 100% estático, leve e seguro. O arquivo <code>.htaccess</code> configurado no projeto ativa automaticamente HTTPS forçado, compactação Gzip e cache de alta performance no servidor Apache da HostGator.
+        </p>
+        <ol style="font-size: 13px; color: var(--text-secondary); padding-left: 20px; line-height: 1.8;">
+          <li>Acesse o <strong>cPanel</strong> da sua conta HostGator.</li>
+          <li>Abra o <strong>Gerenciador de Arquivos</strong> e navegue até <code>public_html/</code> (ou a pasta do seu subdomínio).</li>
+          <li>Compacte todo o conteúdo da pasta <code>site/</code> em um arquivo <code>.zip</code>.</li>
+          <li>Faça o upload do <code>.zip</code> e clique em <strong>Extrair</strong>.</li>
+          <li>Pronto! O seu painel financeiro estará no ar com certificado SSL ativado.</li>
+        </ol>
+      </div>
+    </section>
+  </div>
+
+  <!-- Modal de Confirmação -->
+  <div id="confirmModal" class="modal-backdrop">
+    <div class="modal-box">
+      <div class="modal-icon">⚠️</div>
+      <h3 class="modal-title" id="confirmModalTitle">Confirmar Ação</h3>
+      <p class="modal-message" id="confirmModalMsg">Tem certeza que deseja prosseguir?</p>
+      <div class="modal-actions">
+        <button id="confirmModalCancel" class="btn btn-secondary">Cancelar</button>
+        <button id="confirmModalOk" class="btn btn-primary" style="background: #ef4444; border-color: #ef4444;">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notificações -->
+  <div id="appToast" class="toast">Mensagem de feedback</div>
+
+  <!-- Firebase Scripts (Compat v10) -->
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+
+  <!-- Biblioteca SheetJS para Exportação Excel -->
+  <script src="js/xlsx.full.min.js"></script>
+
+  <!-- Scripts da Aplicação -->
+  <script src="js/storage.js"></script>
+  <script src="js/calculations.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/exporter.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
