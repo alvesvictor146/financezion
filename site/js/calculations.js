@@ -4,6 +4,73 @@
  */
 
 const FinancialEngine = {
+    // Calcula a Margem Disponível por Categoria comparando Fatura de Outubro com o Orçamento 2026
+  calculateCategoryMargins(yearData, cartaoInvoice, targetMonth = 'Outubro') {
+    // Tetos e médias orçadas da aba Orçamento 2026 para Outubro
+    const orcadoMap = {
+      "Combustível (limite)": { orcado: 650.00, icone: "⛽", tipo: "Essencial" },
+      "Lazer (limite)": { orcado: 1000.00, icone: "🌴", tipo: "Estilo de Vida" },
+      "Alimentação trabalho (limite)": { orcado: 220.00, icone: "🍽️", tipo: "Essencial" },
+      "Mercado (limite)": { orcado: 200.00, icone: "🛒", tipo: "Essencial" },
+      "Estacionamento (limite)": { orcado: 90.00, icone: "🅿️", tipo: "Essencial" },
+      "Uber / Transporte (limite)": { orcado: 100.00, icone: "🚗", tipo: "Essencial" },
+      "Farmácia": { orcado: 50.00, icone: "💊", tipo: "Essencial" },
+      "Manutenção carro": { orcado: 283.68, icone: "🔧", tipo: "Essencial" },
+      "Obra": { orcado: 423.88, icone: "🏗️", tipo: "Essencial" },
+      "Barbeiro": { orcado: 87.90, icone: "✂️", tipo: "Estilo de Vida" },
+      "Estudos": { orcado: 96.99, icone: "📚", tipo: "Estilo de Vida" },
+      "Presentes": { orcado: 104.68, icone: "🎁", tipo: "Estilo de Vida" },
+      "Assinaturas/Anuidades": { orcado: 37.23, icone: "📱", tipo: "Estilo de Vida" },
+      "Academia": { orcado: 54.99, icone: "🏋️", tipo: "Estilo de Vida" }
+    };
+
+    // Atualiza com dados dinâmicos da planilha se existirem
+    if (yearData && Array.isArray(yearData.limites_orcados)) {
+      yearData.limites_orcados.forEach(item => {
+        const cat = item.categoria;
+        const matchedKey = Object.keys(orcadoMap).find(k => k.toLowerCase() === cat.toLowerCase() || cat.toLowerCase().includes(k.toLowerCase()));
+        if (matchedKey) {
+          const valOut = Number(item.outubro) || Number(item.mediaFutura) || orcadoMap[matchedKey].orcado;
+          if (valOut > 0) orcadoMap[matchedKey].orcado = valOut;
+        }
+      });
+    }
+
+    // Soma gastos na fatura ativa do cartão
+    const cardCompras = (cartaoInvoice && Array.isArray(cartaoInvoice.compras)) ? cartaoInvoice.compras : [];
+    const cardSpent = {};
+    cardCompras.forEach(c => {
+      const cat = (c.oQue || c.categoria || 'Outros').trim();
+      cardSpent[cat] = (cardSpent[cat] || 0) + (Number(c.euPago || c.valor) || 0);
+    });
+
+    return Object.entries(orcadoMap).map(([cat, meta]) => {
+      const matchKey = Object.keys(cardSpent).find(k =>
+        k.toLowerCase() === cat.toLowerCase() ||
+        cat.toLowerCase().includes(k.toLowerCase()) ||
+        k.toLowerCase().includes(cat.toLowerCase())
+      );
+      const gasto = matchKey ? cardSpent[matchKey] : 0;
+      const margem = meta.orcado - gasto;
+      const pct = meta.orcado > 0 ? Math.round((gasto / meta.orcado) * 100) : 0;
+
+      let status = 'available';
+      if (margem < 0) status = 'exceeded';
+      else if (margem === 0) status = 'limit';
+
+      return {
+        categoria: cat,
+        icone: meta.icone,
+        tipo: meta.tipo,
+        orcado: meta.orcado,
+        gasto: Math.round((gasto + Number.EPSILON) * 100) / 100,
+        margem: Math.round((margem + Number.EPSILON) * 100) / 100,
+        pct,
+        status
+      };
+    });
+  },
+
   // Formatação monetária Brasileira
   formatCurrency(value) {
     const num = Number(value) || 0;
@@ -184,31 +251,33 @@ const FinancialEngine = {
     });
   },
 
-  // Processa Sobra Mensal Atual do mês vigente e médias dos meses futuros
-  processCurrentMonthSurplus(yearData) {
+  // Processa Sobra Mensal Atual do mês vigente e médias dos meses futuros (Foco Outubro)
+  processCurrentMonthSurplus(yearData, targetMonthName = 'Outubro') {
     if (!yearData || !yearData.months || !yearData.months.length) {
       return {
-        nomeMes: 'Agosto',
-        receita: 9178.74,
-        fixa: 6177.86,
-        variavel: 1577.12,
-        gastosTotais: 7754.98,
-        invest: 1200.00,
-        sobra: 223.76,
-        mediaSobra: 1981.53,
-        mediaReceitaFutura: 9458.59,
-        mediaGastosFuturos: 5543.00,
-        mediaFixasFuturas: 4073.92,
-        mediaVariaveisFuturas: 1469.08,
+        nomeMes: 'Outubro',
+        receita: 7973.89,
+        fixa: 3960.54,
+        variavel: 1381.79,
+        gastosTotais: 5342.33,
+        invest: 1000.00,
+        sobra: 1631.56,
+        mediaSobra: 4597.06,
+        mediaReceitaFutura: 10910.79,
+        mediaGastosFuturos: 5040.67,
+        mediaFixasFuturas: 3757.36,
+        mediaVariaveisFuturas: 1556.37,
         mediaInvestFuturo: 1000.00,
-        mediaSobraFutura: 2915.59,
-        totalSobraFutura: 11662.35,
-        totalSobraAcumulada: 11886.11
+        mediaSobraFutura: 4597.06,
+        totalSobraFutura: 9194.12,
+        totalSobraAcumulada: 10825.68
       };
     }
 
-    // Mês atual é Agosto
-    const currentMonth = yearData.months.find(m => m.name === 'Agosto') || yearData.months[1] || yearData.months[0];
+    // Mês ativo (Padrão: Outubro conforme acompanhamento atual)
+    const currentMonth = yearData.months.find(m => m.name.toLowerCase() === (targetMonthName || 'outubro').toLowerCase()) ||
+                         yearData.months.find(m => m.name === 'Outubro') ||
+                         yearData.months[3] || yearData.months[0];
     const recAtual = Number(currentMonth.receita) || 0;
     const fixAtual = Number(currentMonth.fixa) || 0;
     const varAtual = Number(currentMonth.variavel) || 0;

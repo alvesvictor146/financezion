@@ -88,18 +88,27 @@ const CloudStorage = {
     }
   },
 
-  // Salvar dados do usuário no Firestore
+  lastError: null,
+
+  // Salvar dados do usuário no Firestore (com higienização para evitar erros com undefined)
   async saveUserData(userId, data) {
-    if (!firestoreDb || !userId) return false;
+    if (!firestoreDb || !userId) {
+      this.lastError = new Error('Firestore ou Usuário não autenticado');
+      return false;
+    }
     try {
+      // Remove qualquer campo undefined (Firestore rejeita e cancela se houver undefined)
+      const cleanData = JSON.parse(JSON.stringify(data));
       const docRef = firestoreDb.collection('users').doc(userId);
       await docRef.set({
-        ...data,
+        ...cleanData,
         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
       }, { merge: true });
+      this.lastError = null;
       return true;
     } catch (err) {
-      console.warn('Erro ao salvar no Firestore:', err);
+      this.lastError = err;
+      console.error('Erro detalhado ao salvar no Firestore:', err);
       return false;
     }
   }

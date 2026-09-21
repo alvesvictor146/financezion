@@ -1,12 +1,15 @@
-import http.server
+﻿import http.server
 import socketserver
 import webbrowser
 import os
 import socket
+import sys
 
-DIRECTORY = r"C:\Users\user0636\.gemini\antigravity-ide\scratch\financeiro\site"
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
 
-# Encontrar porta livre a partir de 5500
+DIRECTORY = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'site')
+
 def find_free_port(start_port=5500):
     port = start_port
     while port < 6500:
@@ -23,7 +26,7 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
         super().__init__(*args, directory=DIRECTORY, **kwargs)
 
 print("=" * 60)
-print("  🚀 SERVIDOR DE TESTES LOCAL - VICTOR FINANÇAS")
+print("  [SERVIDOR DE TESTES LOCAL] - VICTOR FINANCAS")
 print(f"  Porta selecionada: {PORT}")
 print(f"  Acesse no navegador: http://localhost:{PORT}/login.html")
 print("=" * 60)
@@ -34,7 +37,6 @@ try:
 except Exception:
     pass
 
-# Permitir reuso do socket imediatamente
 socketserver.TCPServer.allow_reuse_address = True
 
 with socketserver.TCPServer(("localhost", PORT), CustomHandler) as httpd:

@@ -82,9 +82,22 @@ document.addEventListener('DOMContentLoaded', () => {
         renderAll();
         showToast(`Bem-vindo, ${user.displayName || 'Victor'}!`);
       } else {
-        // Se estiver num ambiente web real (não file:// local offline) e sem login, redireciona para login
-        if (window.location.protocol !== 'file:' && !window.location.href.includes('login.html')) {
-          window.location.href = 'login.html';
+        // Modo Local / Offline automático se for localhost ou se o usuário optou por modo local
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:';
+        const isGuest = sessionStorage.getItem('guest_mode') === 'true';
+
+        if (isLocal || isGuest) {
+          if (userProfileChip) userProfileChip.style.display = 'flex';
+          if (userName) userName.textContent = 'Victor Alves';
+          if (userAvatar) userAvatar.textContent = 'V';
+          if (syncText) syncText.textContent = 'Modo Local';
+          if (syncDot) syncDot.className = 'sync-dot synced';
+          populateCategoryFilter();
+          renderAll();
+        } else {
+          if (!window.location.href.includes('login.html')) {
+            window.location.href = 'login.html';
+          }
         }
       }
     });
@@ -189,6 +202,18 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Renderiza todo o aplicativo
+    // Obter fatura ativa conforme o mês em acompanhamento (Padrão: Outubro)
+  function getActiveCardInvoice() {
+    const selMonth = appState.selectedMonth || 'Outubro';
+    if (selMonth === 'Outubro') {
+      return appState.cartaoOutubro || (typeof DEFAULT_FINANCIAL_DATA !== 'undefined' ? DEFAULT_FINANCIAL_DATA.cartaoOutubro : null) || { compras: [], total: 0 };
+    }
+    if (selMonth === 'Agosto') {
+      return appState.cartaoAgosto || (typeof DEFAULT_FINANCIAL_DATA !== 'undefined' ? DEFAULT_FINANCIAL_DATA.cartaoAgosto : null) || { compras: [], total: 0 };
+    }
+    return appState.cartaoOutubro || (typeof DEFAULT_FINANCIAL_DATA !== 'undefined' ? DEFAULT_FINANCIAL_DATA.cartaoOutubro : null) || appState.cartaoAgosto || { compras: [], total: 0 };
+  }
+
   function renderAll() {
     renderDashboard();
     renderTransactionsTable();
@@ -199,17 +224,27 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // 1. DASHBOARD
+    // 1. DASHBOARD EXCLUSIVO: FATURAS OUTUBRO + SOBRA + MARGEM POR CATEGORIAS
+  let activeMarginFilter = 'all';
+
   function renderDashboard() {
     const yearData = appState.years[appState.selectedYear];
     if (!yearData) return;
-    const summary = FinancialEngine.processYearSummary(yearData);
 
-    // 1.1 CARDS DOS 4 CARTÕES DE CRÉDITO (Fatura do Mês Atual)
-    const cardsBreakdown = FinancialEngine.processCreditCardsBreakdown(appState.cartaoAgosto);
+    // 1.1 Cards dos 4 Cartões de Crédito (Outubro)
+    const activeInvoice = getActiveCardInvoice();
+    const cardsBreakdown = FinancialEngine.processCreditCardsBreakdown(activeInvoice);
     const bbCard = cardsBreakdown.find(c => c.id === 'bb');
     const itauCard = cardsBreakdown.find(c => c.id === 'itau');
     const alexCard = cardsBreakdown.find(c => c.id === 'emporio');
     const nubankCard = cardsBreakdown.find(c => c.id === 'nubank');
+
+    const totalInvoice = activeInvoice.total || cardsBreakdown.reduce((s, c) => s + c.total, 0);
+    const totalTag = document.getElementById('invoiceTotalTag');
+    if (totalTag) totalTag.textContent = `Total Fatura: ${FinancialEngine.formatCurrency(totalInvoice)}`;
+
+    const subtitleEl = document.getElementById('lblDashboardInvoiceSubtitle');
+    if (subtitleEl) subtitleEl.textContent = `(Fatura de ${appState.selectedMonth || 'Outubro'} - Total: ${FinancialEngine.formatCurrency(totalInvoice)})`;
 
     if (bbCard) {
       const elVal = document.getElementById('card-bb-val');
@@ -247,10 +282,9 @@ document.addEventListener('DOMContentLoaded', () => {
       if (elPct) elPct.textContent = `${nubankCard.pct.toFixed(1)}% do total`;
     }
 
-    // 1.2 SOBRA MENSAL ATUAL & BREAKDOWN DO MÊS
-    const monthSurplus = FinancialEngine.processCurrentMonthSurplus(yearData);
+    // 1.2 Card Sobra do Mês Atual (Outubro)
+    const monthSurplus = FinancialEngine.processCurrentMonthSurplus(yearData, appState.selectedMonth || 'Outubro');
     const elCurSurplus = document.getElementById('currentMonthlySurplus');
-    const elAvgSurplus = document.getElementById('avgMonthlySurplus');
     const elLblMonth = document.getElementById('lblCurrentMonth');
     const elMRec = document.getElementById('mRecVal');
     const elMFix = document.getElementById('mFixVal');
@@ -258,91 +292,89 @@ document.addEventListener('DOMContentLoaded', () => {
     const elMInv = document.getElementById('mInvVal');
 
     if (elCurSurplus) elCurSurplus.textContent = FinancialEngine.formatCurrency(monthSurplus.sobra);
-    if (elAvgSurplus) elAvgSurplus.textContent = `${FinancialEngine.formatCurrency(monthSurplus.mediaSobra)} / mês`;
-    if (elLblMonth) elLblMonth.textContent = `Mês Vigente (${monthSurplus.nomeMes})`;
+    if (elLblMonth) elLblMonth.textContent = `Mês Vigente: ${monthSurplus.nomeMes} 2026`;
     if (elMRec) elMRec.textContent = FinancialEngine.formatCurrency(monthSurplus.receita);
     if (elMFix) elMFix.textContent = FinancialEngine.formatCurrency(monthSurplus.fixa);
     if (elMVar) elMVar.textContent = FinancialEngine.formatCurrency(monthSurplus.variavel);
     if (elMInv) elMInv.textContent = FinancialEngine.formatCurrency(monthSurplus.invest);
 
-    // Projeções e Médias dos Meses Futuros
-    const elFutInc = document.getElementById('futAvgIncome');
-    const elFutExp = document.getElementById('futAvgExpenses');
-    const elFutSur = document.getElementById('futAvgSurplus');
-    const elFutTot = document.getElementById('futTotalSurplus');
+    // 1.3 Divisão por Categorias (Margem Disponível de cada uma)
+    renderCategoryMargins(yearData, activeInvoice);
+  }
 
-    if (elFutInc) elFutInc.textContent = FinancialEngine.formatCurrency(monthSurplus.mediaReceitaFutura);
-    if (elFutExp) elFutExp.textContent = FinancialEngine.formatCurrency(monthSurplus.mediaGastosFuturos);
-    if (elFutSur) elFutSur.textContent = FinancialEngine.formatCurrency(monthSurplus.mediaSobraFutura);
-    if (elFutTot) elFutTot.textContent = FinancialEngine.formatCurrency(monthSurplus.totalSobraAcumulada);
+  function renderCategoryMargins(yearData, activeInvoice) {
+    const grid = document.getElementById('categoryMarginsGrid');
+    if (!grid || typeof FinancialEngine.calculateCategoryMargins !== 'function') return;
 
-    // 1.3 GRÁFICO E INDICADORES DE LIMITES ORÇADOS (ORÇAMENTO ANUAL)
-    const limitsInfo = FinancialEngine.processBudgetLimits(yearData);
-    ChartsEngine.renderLimitsComparisonChart('limitsComparisonChart', limitsInfo);
-
-    const elLimitBadge = document.getElementById('limitStatusBadge');
-    if (elLimitBadge) {
-      if (limitsInfo.pctGeral > 100) {
-        elLimitBadge.className = 'badge-status-limit exceeded';
-        elLimitBadge.textContent = `⚠️ Teto Excedido (${limitsInfo.pctGeral.toFixed(0)}% usado)`;
-      } else if (limitsInfo.pctGeral >= 85) {
-        elLimitBadge.className = 'badge-status-limit warning';
-        elLimitBadge.textContent = `⚠️ Atenção ao Teto (${limitsInfo.pctGeral.toFixed(0)}% usado)`;
-      } else {
-        elLimitBadge.className = 'badge-status-limit';
-        elLimitBadge.textContent = `🛡️ Dentro do Teto (${limitsInfo.pctGeral.toFixed(0)}% usado)`;
-      }
+    const margins = FinancialEngine.calculateCategoryMargins(yearData, activeInvoice, appState.selectedMonth || 'Outubro');
+    
+    let filtered = margins;
+    if (activeMarginFilter === 'available') {
+      filtered = margins.filter(m => m.status === 'available');
+    } else if (activeMarginFilter === 'exceeded') {
+      filtered = margins.filter(m => m.status === 'exceeded' || m.status === 'limit');
     }
 
-    const pillsContainer = document.getElementById('limitsPillsRow');
-    if (pillsContainer && limitsInfo.items) {
-      pillsContainer.innerHTML = limitsInfo.items.map(item => `
-        <div class="limit-pill-item">
-          <div class="limit-pill-header">
-            <span>${item.icon} ${escapeHtml(item.label)}</span>
-            <span style="color: ${item.statusCor}">${item.pct.toFixed(0)}%</span>
+    grid.innerHTML = filtered.map(m => {
+      let badgeText = 'Disponível';
+      let amountClass = 'pos';
+      let progressColor = '#10b981';
+      let displayMargem = `+ ${FinancialEngine.formatCurrency(m.margem)}`;
+
+      if (m.status === 'exceeded') {
+        badgeText = 'Estourou';
+        amountClass = 'neg';
+        progressColor = '#ef4444';
+        displayMargem = `- ${FinancialEngine.formatCurrency(Math.abs(m.margem))}`;
+      } else if (m.status === 'limit') {
+        badgeText = 'No Limite';
+        amountClass = 'zero';
+        progressColor = '#f59e0b';
+        displayMargem = 'R$ 0,00';
+      }
+
+      const barWidth = Math.min(100, m.pct);
+
+      return `
+        <div class="margin-card status-${m.status}">
+          <div class="margin-card-header">
+            <div class="margin-card-title">
+              <span>${m.icone}</span>
+              <span>${escapeHtml(m.categoria)}</span>
+            </div>
+            <span class="margin-card-badge">${badgeText}</span>
           </div>
-          <div class="limit-pill-bar">
-            <div class="limit-pill-fill" style="width: ${item.pct}%; background: ${item.statusCor};"></div>
+
+          <div class="margin-val-row">
+            <span class="margin-label">Margem Restante:</span>
+            <span class="margin-amount ${amountClass}">${displayMargem}</span>
           </div>
-          <div class="limit-pill-footer">
-            <span style="color: #cbd5e1">${FinancialEngine.formatCurrency(item.gastoAtual)}</span>
-            <span style="color: var(--text-muted)">Teto ${FinancialEngine.formatCurrency(item.teto)}</span>
+
+          <div class="margin-details-row">
+            <span>Gasto: <strong>${FinancialEngine.formatCurrency(m.gasto)}</strong></span>
+            <span>Orçado: <strong>${FinancialEngine.formatCurrency(m.orcado)}</strong></span>
+          </div>
+
+          <div class="margin-progress-bar-bg" title="${m.pct}% do teto gasto">
+            <div class="margin-progress-bar-fill" style="width: ${barWidth}%; background: ${progressColor};"></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 10px; color: var(--text-muted); margin-top: 4px;">
+            <span>${m.tipo}</span>
+            <span>${m.pct}% utilizado</span>
           </div>
         </div>
-      `).join('');
-    }
+      `;
+    }).join('');
 
-    // 1.4 KPIS GERAIS ACUMULADOS DO ANO
-    const kpiReceita = document.getElementById('kpi-receita');
-    const kpiFixa = document.getElementById('kpi-fixa');
-    const kpiVariavel = document.getElementById('kpi-variavel');
-    const kpiInvest = document.getElementById('kpi-invest');
-    const kpiSobra = document.getElementById('kpi-sobra');
-
-    if (kpiReceita) kpiReceita.textContent = FinancialEngine.formatCurrency(summary.totalReceitas);
-    if (kpiFixa) kpiFixa.textContent = FinancialEngine.formatCurrency(summary.totalFixas);
-    if (kpiVariavel) kpiVariavel.textContent = FinancialEngine.formatCurrency(summary.totalVariaveis);
-    if (kpiInvest) kpiInvest.textContent = FinancialEngine.formatCurrency(summary.totalInvestimentos);
-    if (kpiSobra) kpiSobra.textContent = FinancialEngine.formatCurrency(summary.sobraTotal);
-
-    // Badges de percentual
-    const badgeFixa = document.getElementById('badge-fixa');
-    const badgeVariavel = document.getElementById('badge-variavel');
-    const badgeInvest = document.getElementById('badge-invest');
-
-    if (badgeFixa) badgeFixa.textContent = FinancialEngine.formatPercent(summary.pctFixas);
-    if (badgeVariavel) badgeVariavel.textContent = FinancialEngine.formatPercent(summary.pctVariaveis);
-    if (badgeInvest) badgeInvest.textContent = FinancialEngine.formatPercent(summary.pctInvest);
-
-    // Gráficos de Fluxo de Caixa e Distribuição
-    if (summary.months && summary.months.length) {
-      ChartsEngine.renderCashFlowChart('cashFlowChart', summary.months);
-      ChartsEngine.renderDistributionChart('distributionChart', summary);
-    }
-
-    // Tabela Mensal detalhada
-    renderMonthlyBudgetTable(summary.months);
+    // Setup filter buttons
+    document.querySelectorAll('.filter-margin-btn').forEach(btn => {
+      btn.onclick = () => {
+        document.querySelectorAll('.filter-margin-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeMarginFilter = btn.getAttribute('data-filter') || 'all';
+        renderCategoryMargins(yearData, activeInvoice);
+      };
+    });
   }
 
   function renderMonthlyBudgetTable(months) {
@@ -419,17 +451,33 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
 
-      // Impacta o mês correspondente no orçamento anual ativo
-      const monthIdx = new Date(date).getMonth();
+      // Impacta o mês correspondente no orçamento anual ativo (busca por nome para compatibilidade com qualquer ano)
+      const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+      const targetMonthName = monthNames[new Date(date + 'T12:00:00').getMonth()];
       const currentYearData = appState.years[appState.selectedYear];
-      if (currentYearData && currentYearData.months && currentYearData.months[monthIdx]) {
-        if (type === 'receita') currentYearData.months[monthIdx].receita += val;
-        else if (type === 'fixa') currentYearData.months[monthIdx].fixa += val;
-        else if (type === 'variavel') currentYearData.months[monthIdx].variavel += val;
-        else if (type === 'invest') currentYearData.months[monthIdx].invest += val;
+      if (currentYearData && Array.isArray(currentYearData.months)) {
+        const targetMonth = currentYearData.months.find(m => m.name.toLowerCase() === targetMonthName.toLowerCase());
+        if (targetMonth) {
+          if (type === 'receita') targetMonth.receita = Math.round(((targetMonth.receita || 0) + val + Number.EPSILON) * 100) / 100;
+          else if (type === 'fixa') targetMonth.fixa = Math.round(((targetMonth.fixa || 0) + val + Number.EPSILON) * 100) / 100;
+          else if (type === 'variavel') targetMonth.variavel = Math.round(((targetMonth.variavel || 0) + val + Number.EPSILON) * 100) / 100;
+          else if (type === 'invest') targetMonth.invest = Math.round(((targetMonth.invest || 0) + val + Number.EPSILON) * 100) / 100;
+
+          // Recalcula sobra e porcentagens do mês imediatamente
+          const rec = targetMonth.receita || 0;
+          targetMonth.pctFixa = rec > 0 ? ((targetMonth.fixa || 0) / rec) * 100 : 0;
+          targetMonth.pctVar = rec > 0 ? ((targetMonth.variavel || 0) / rec) * 100 : 0;
+          targetMonth.pctInv = rec > 0 ? ((targetMonth.invest || 0) / rec) * 100 : 0;
+          targetMonth.sobra = Math.round((rec - (targetMonth.fixa || 0) - (targetMonth.variavel || 0) - (targetMonth.invest || 0) + Number.EPSILON) * 100) / 100;
+        }
       }
 
       StorageEngine.save(appState);
+
+      // Sincronização em tempo real com a Planilha Google online (se configurada)
+      if (typeof GoogleSheetsSync !== 'undefined' && GoogleSheetsSync.isConfigured()) {
+        GoogleSheetsSync.syncTransaction(newTx);
+      }
       populateCategoryFilter();
       renderAll();
       formEntry.reset();
@@ -535,7 +583,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function renderCardTab() {
-    const cartao = appState.cartaoAgosto || {};
+    const cartao = getActiveCardInvoice();
+    const lblCardHeading = document.getElementById("lblCardPurchasesHeading");
+    if (lblCardHeading) lblCardHeading.textContent = `Lançamentos da Fatura de ${appState.selectedMonth || "Outubro"}`;
+    const lblKpiTitle = document.getElementById("lblCardTabInvoiceTitle");
+    if (lblKpiTitle) lblKpiTitle.textContent = `Fatura Atual (${appState.selectedMonth || "Outubro"})`;
     const cardTotalEl = document.getElementById('cardInvoiceTotal');
     const cardItemsCountEl = document.getElementById('cardInvoiceCount');
     const tbody = document.getElementById('cardPurchasesTbody');
@@ -649,6 +701,12 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       StorageEngine.save(appState);
+
+      // Sincronização em tempo real com a Planilha Google online (se configurada)
+      if (typeof GoogleSheetsSync !== 'undefined' && GoogleSheetsSync.isConfigured()) {
+        GoogleSheetsSync.syncCardPurchase(newCardItem);
+      }
+
       renderCardTab();
       renderDashboard();
       formCard.reset();
@@ -858,6 +916,225 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
       toast.classList.remove('show');
     }, 3200);
+  }
+
+
+  // ============================================================================
+  // INTEGRAÇÃO COM PLANILHA GOOGLE (GOOGLE SHEETS) E SINCRONIZAÇÃO EM NUVEM
+  // ============================================================================
+  const sheetsUrlInput = document.getElementById('sheetsWebhookUrlInput');
+  const btnSaveSheetsUrl = document.getElementById('btnSaveSheetsUrl');
+  const btnTestSheets = document.getElementById('btnTestSheetsConnection');
+  const btnSyncAllSheets = document.getElementById('btnSyncAllToSheets');
+  const sheetsStatusBadge = document.getElementById('sheetsStatusBadge');
+  const sheetsFeedbackBox = document.getElementById('sheetsFeedbackBox');
+  const btnManualSyncCloud = document.getElementById('btnManualSyncCloud');
+  const btnManualSyncLabel = document.getElementById('btnManualSyncLabel');
+
+  function updateSheetsBadgeStatus() {
+    if (!sheetsStatusBadge) return;
+    if (typeof GoogleSheetsSync !== 'undefined' && GoogleSheetsSync.isConfigured()) {
+      sheetsStatusBadge.textContent = 'Conectado à Planilha';
+      sheetsStatusBadge.style.background = 'rgba(16, 185, 129, 0.2)';
+      sheetsStatusBadge.style.color = '#34d399';
+    } else {
+      sheetsStatusBadge.textContent = 'Não configurado';
+      sheetsStatusBadge.style.background = 'rgba(100, 116, 139, 0.2)';
+      sheetsStatusBadge.style.color = '#94a3b8';
+    }
+  }
+
+  if (sheetsUrlInput && typeof GoogleSheetsSync !== 'undefined') {
+    sheetsUrlInput.value = GoogleSheetsSync.getWebhookUrl();
+    updateSheetsBadgeStatus();
+  }
+
+  if (btnSaveSheetsUrl) {
+    btnSaveSheetsUrl.addEventListener('click', () => {
+      const url = sheetsUrlInput ? sheetsUrlInput.value.trim() : '';
+      if (typeof GoogleSheetsSync !== 'undefined') {
+        GoogleSheetsSync.setWebhookUrl(url);
+        updateSheetsBadgeStatus();
+        showToast(url ? 'URL da Planilha Google salva!' : 'Configuração limpa.');
+      }
+    });
+  }
+
+  if (btnTestSheets) {
+    btnTestSheets.addEventListener('click', async () => {
+      if (typeof GoogleSheetsSync === 'undefined' || !GoogleSheetsSync.isConfigured()) {
+        showToast('Informe e salve a URL do Webhook primeiro.', true);
+        return;
+      }
+      btnTestSheets.disabled = true;
+      btnTestSheets.textContent = 'Testando...';
+      if (sheetsFeedbackBox) {
+        sheetsFeedbackBox.style.display = 'block';
+        sheetsFeedbackBox.style.background = 'rgba(56, 189, 248, 0.1)';
+        sheetsFeedbackBox.style.color = '#38bdf8';
+        sheetsFeedbackBox.textContent = 'Enviando teste de conexão para a Planilha Google...';
+      }
+
+      const res = await GoogleSheetsSync.testConnection();
+      btnTestSheets.disabled = false;
+      btnTestSheets.textContent = '⚡ Testar Conexão';
+
+      if (res.success) {
+        sheetsFeedbackBox.style.background = 'rgba(16, 185, 129, 0.15)';
+        sheetsFeedbackBox.style.color = '#34d399';
+        sheetsFeedbackBox.textContent = '✓ Conexão bem-sucedida! Sua planilha está pronta para receber lançamentos.';
+        showToast('Conexão com a Planilha Google confirmada!');
+      } else {
+        sheetsFeedbackBox.style.background = 'rgba(239, 68, 68, 0.15)';
+        sheetsFeedbackBox.style.color = '#f87171';
+        sheetsFeedbackBox.textContent = 'Aviso: ' + (res.message || 'Verifique se o App da Web foi implantado com permissão "Qualquer pessoa".');
+      }
+    });
+  }
+
+  if (btnSyncAllSheets) {
+    btnSyncAllSheets.addEventListener('click', async () => {
+      if (typeof GoogleSheetsSync === 'undefined' || !GoogleSheetsSync.isConfigured()) {
+        showToast('Configure a URL da Planilha Google antes de sincronizar.', true);
+        return;
+      }
+      btnSyncAllSheets.disabled = true;
+      btnSyncAllSheets.textContent = 'Sincronizando...';
+      showToast('Enviando lançamentos para a Planilha Google...');
+
+      const res = await GoogleSheetsSync.syncAllData(appState);
+      btnSyncAllSheets.disabled = false;
+      btnSyncAllSheets.textContent = '🔄 Enviar Todos os Lançamentos para a Planilha Google';
+
+      if (res.success) {
+        showToast('Planilha Google atualizada com todos os lançamentos!');
+      } else {
+        showToast(res.message || 'Erro ao sincronizar com a Planilha Google.', true);
+      }
+    });
+  }
+
+  if (btnManualSyncCloud) {
+    btnManualSyncCloud.addEventListener('click', async () => {
+      if (btnManualSyncLabel) btnManualSyncLabel.textContent = 'Salvando...';
+      btnManualSyncCloud.disabled = true;
+
+      // 1. Salva e sincroniza com Cloud Firestore
+      const res = await StorageEngine.syncNow();
+      
+      // 2. Se Planilha Google estiver configurada, envia também
+      if (typeof GoogleSheetsSync !== 'undefined' && GoogleSheetsSync.isConfigured()) {
+        GoogleSheetsSync.syncAllData(appState);
+      }
+
+      btnManualSyncCloud.disabled = false;
+      if (btnManualSyncLabel) btnManualSyncLabel.textContent = 'Sincronizar';
+      showToast(res.message || 'Sincronização concluída!');
+    });
+  }
+
+
+  // Seletor de Mês Ativo no Topo (Foco em Outubro)
+  const monthSelect = document.getElementById('monthSelect');
+  if (monthSelect) {
+    monthSelect.value = appState.selectedMonth || 'Outubro';
+    monthSelect.addEventListener('change', (e) => {
+      appState.selectedMonth = e.target.value;
+      StorageEngine.save(appState);
+      renderAll();
+      showToast(`Exibindo dados focados no mês de ${appState.selectedMonth}`);
+    });
+  }
+
+  // Botão de Puxar Fatura de Outubro diretamente da Planilha Google Online
+  const btnPullSheet = document.getElementById('btnPullGoogleSheet');
+  if (btnPullSheet) {
+    btnPullSheet.addEventListener('click', async () => {
+      btnPullSheet.disabled = true;
+      btnPullSheet.innerHTML = '<span>Atualizando...</span>';
+      showToast('Conectando à sua Planilha Google Online...');
+
+      try {
+        const sheetCsvUrl = 'https://docs.google.com/spreadsheets/d/1La4TsmQTnWxTMHsZIiH8I5UmFYQ6r9yHQD_0BKbwgRY/export?format=csv&gid=1199015194';
+        const resp = await fetch(sheetCsvUrl);
+        if (!resp.ok) throw new Error('Não foi possível ler a planilha online.');
+        const csvText = await resp.text();
+
+        // Parser CSV inteligente
+        const lines = csvText.split(/\r?\n/);
+        const parsedItems = [];
+
+        lines.forEach((line, idx) => {
+          if (!line.trim()) return;
+          // Parse de campos respeitando aspas
+          const cols = [];
+          let cur = '';
+          let inQuotes = false;
+          for (let i = 0; i < line.length; i++) {
+            const char = line[i];
+            if (char === '"') { inQuotes = !inQuotes; }
+            else if (char === ',' && !inQuotes) { cols.push(cur.trim()); cur = ''; }
+            else { cur += char; }
+          }
+          cols.push(cur.trim());
+
+          if (cols.length >= 8 && cols[1] && !cols[1].includes('O que?') && !cols[1].includes('Fatura Outubro')) {
+            const oQue = cols[1].replace(/^"|"$/g, '').trim();
+            const euPagoStr = cols[2].replace(/[R$\s.]/g, '').replace(',', '.').trim();
+            const valParcStr = cols[3].replace(/[R$\s.]/g, '').replace(',', '.').trim();
+            const parcAtual = cols[4].replace(/^"|"$/g, '').trim();
+            const numParc = cols[5].replace(/^"|"$/g, '').trim();
+            const motivo = cols[6].replace(/^"|"$/g, '').trim();
+            const cartao = cols[7].replace(/^"|"$/g, '').trim();
+
+            const euPago = parseFloat(euPagoStr) || 0;
+            const valorParc = parseFloat(valParcStr) || euPago;
+
+            if (euPago > 0 || valorParc > 0) {
+              parsedItems.push({
+                id: 'c-out-' + (idx + 1),
+                linha: idx + 1,
+                oQue,
+                euPago,
+                valor: valorParc,
+                parcelaAtual: parcAtual,
+                numParcelas: numParc,
+                motivo,
+                cartao
+              });
+            }
+          }
+        });
+
+        if (parsedItems.length > 0) {
+          appState.cartaoOutubro = {
+            titulo: 'Fatura Outubro - vencimento 10/10',
+            atualizadoEm: new Date().toLocaleDateString('pt-BR'),
+            mes: 'Outubro',
+            total: Math.round((parsedItems.reduce((s, i) => s + (i.euPago || i.valor), 0) + Number.EPSILON) * 100) / 100,
+            limiteDisponivel: 3878.89,
+            compras: parsedItems
+          };
+          appState.selectedMonth = 'Outubro';
+
+          if (typeof FinancialEngine !== 'undefined' && typeof FinancialEngine.recalculateBudgetLinkage === 'function') {
+            FinancialEngine.recalculateBudgetLinkage(appState);
+          }
+
+          StorageEngine.save(appState);
+          renderAll();
+          showToast(`Sucesso! ${parsedItems.length} lançamentos de Outubro importados da Planilha Google (Total: ${FinancialEngine.formatCurrency(appState.cartaoOutubro.total)})!`);
+        } else {
+          showToast('Nenhum dado encontrado na aba de Outubro.', true);
+        }
+      } catch (err) {
+        console.error('Erro ao importar da planilha:', err);
+        showToast('Erro ao ler a planilha online: ' + err.message, true);
+      } finally {
+        btnPullSheet.disabled = false;
+        btnPullSheet.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> <span>Atualizar da Planilha Online</span>';
+      }
+    });
   }
 
   // Render inicial completo

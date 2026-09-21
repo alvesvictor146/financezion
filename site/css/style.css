@@ -1112,3 +1112,160 @@ input:focus, select:focus, textarea:focus {
   font-weight: 700;
 }
 
+
+
+/* ==============================================================================
+   GRID DE MARGEM POR CATEGORIA (OUTUBRO - HOME SCREEN)
+   ============================================================================== */
+.category-margins-section {
+  margin-top: 24px;
+}
+
+.category-margins-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-top: 14px;
+}
+
+.margin-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(12px);
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.margin-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.margin-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+}
+
+.margin-card.status-available::before { background: #10b981; }
+.margin-card.status-limit::before { background: #f59e0b; }
+.margin-card.status-exceeded::before { background: #ef4444; }
+
+.margin-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.margin-card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #f8fafc;
+}
+
+.margin-card-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.margin-card.status-available .margin-card-badge {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.margin-card.status-limit .margin-card-badge {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.margin-card.status-exceeded .margin-card-badge {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.margin-val-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+
+.margin-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.margin-amount {
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.margin-amount.pos { color: #10b981; }
+.margin-amount.zero { color: #fbbf24; }
+.margin-amount.neg { color: #ef4444; }
+
+.margin-details-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.margin-progress-bar-bg {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.margin-progress-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
+.filter-margin-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.filter-margin-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.filter-margin-btn.active {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: rgba(56, 189, 248, 0.4);
+  color: #38bdf8;
+  font-weight: 600;
+}

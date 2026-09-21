@@ -315,6 +315,14 @@
           window.location.href = 'index.html';
         }
       } catch (err) {
+    const btnGuest = document.getElementById('btnGuestMode');
+    if (btnGuest) {
+      btnGuest.addEventListener('click', () => {
+        sessionStorage.setItem('guest_mode', 'true');
+        window.location.href = 'index.html';
+      });
+    }
+
         console.error('Falha no login Google:', err);
         btnGoogle.disabled = false;
         btnText.textContent = 'Continuar com Google';

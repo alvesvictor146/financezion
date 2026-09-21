@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Victor Finanças — Orçamento Anual & Gestão Patrimonial</title>
   <meta name="description" content="Dashboard financeiro inteligente e refinado, integrado com orçamentos anuais, cartões, metas e investimentos. Pronto para HostGator.">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.firebaseio.com https://*.googleapis.com wss://*.firebaseio.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com; img-src 'self' data: https:;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.firebaseio.com https://*.googleapis.com https://*.google.com https://script.google.com https://script.googleusercontent.com wss://*.firebaseio.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://accounts.google.com; img-src 'self' data: https:;">
 
   <!-- Fontes do Google -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -108,6 +108,20 @@
           <option value="2027">Orçamento 2027</option>
         </select>
 
+        <label for="monthSelect" style="font-size: 13px; color: var(--text-secondary); margin-left: 6px;">Mês:</label>
+        <select id="monthSelect" class="year-selector" style="font-weight: 700; color: #38bdf8;">
+          <option value="Outubro" selected>Outubro (Atual)</option>
+          <option value="Setembro">Setembro</option>
+          <option value="Agosto">Agosto</option>
+          <option value="Julho">Julho</option>
+          <option value="Novembro">Novembro</option>
+          <option value="Dezembro">Dezembro</option>
+        </select>
+
+        <button id="btnManualSyncCloud" class="btn btn-secondary" style="font-size: 12px; padding: 8px 12px; display: flex; align-items: center; gap: 6px;" title="Sincronizar dados com a Nuvem e Planilha Google">
+          <svg id="syncIconSvg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          <span id="btnManualSyncLabel">Sincronizar</span>
+        </button>
         <button id="btnExportExcelTop" class="btn btn-secondary" style="font-size: 12px; padding: 8px 14px; background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.4); color: #34d399; font-weight: 600; display: flex; align-items: center; gap: 6px;" title="Exportar Planilha Excel Completa com dados atualizados">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
           Exportar Planilha (.xlsx)
@@ -122,268 +136,138 @@
 
     <!-- ABA 1: VISÃO GERAL & ORÇAMENTO -->
     <main id="tab-dashboard" class="tab-content active">
-
-      <!-- 1. CARDS DOS 4 CARTÕES DE CRÉDITO (FATURA DO MÊS ATUAL) -->
-      <div style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <h3 style="font-size: 15px; font-weight: 700; color: #f8fafc;">💳 Faturas do Mês Atual por Cartão</h3>
-          <span style="font-size: 12px; color: var(--text-muted);">(Aba Cartão Agosto — Total: R$ 5.425,71)</span>
-        </div>
-        <span class="tag" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3);">
-          4 Cartões Estabelecidos
-        </span>
-      </div>
-
-      <div class="cards-grid-4">
-        <!-- Card 1: BB -->
-        <div class="card-credit-mini bb-card">
-          <div class="card-credit-header">
-            <span class="card-badge bb">🟡 Banco do Brasil</span>
-            <span class="card-flag" id="card-bb-count">62 compras</span>
+      <!-- 1. CARDS DAS PRÓXIMAS FATURAS DE CADA CARTÃO (OUTUBRO) -->
+      <section class="credit-cards-row-section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
+          <div>
+            <h2 style="font-size: 18px; font-weight: 700; color: #f8fafc; margin: 0; display: flex; align-items: center; gap: 8px;">
+              <span>💳</span> Próximas Faturas dos Cartões (Outubro)
+            </h2>
+            <span id="lblDashboardInvoiceSubtitle" style="font-size: 12px; color: var(--text-muted);">(Fatura de Outubro - Total: R$ 3.026,42)</span>
           </div>
-          <div class="card-credit-value" id="card-bb-val">R$ 2.980,50</div>
-          <div class="card-credit-footer">
-            <span>Fatura Aberta</span>
-            <span class="card-pct" id="card-bb-pct">54.9%</span>
-          </div>
+          <span class="tag" id="invoiceTotalTag" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); font-size: 13px; font-weight: 700; padding: 6px 14px;">
+            Total Fatura: R$ 3.026,42
+          </span>
         </div>
 
-        <!-- Card 2: Itaú -->
-        <div class="card-credit-mini itau-card">
-          <div class="card-credit-header">
-            <span class="card-badge itau">🟠 Itaú Uniclass</span>
-            <span class="card-flag" id="card-itau-count">19 compras</span>
+        <div class="credit-cards-grid">
+          <!-- Banco do Brasil -->
+          <div class="card-credit-mini bb-card">
+            <div class="card-credit-header">
+              <span class="card-badge bb">🟡 Banco do Brasil</span>
+              <span class="card-flag" id="card-bb-count">19 compras</span>
+            </div>
+            <div class="card-credit-value" id="card-bb-val">R$ 1.049,79</div>
+            <div class="card-credit-footer">
+              <span>C/C BB</span>
+              <span class="card-pct" id="card-bb-pct">34.7%</span>
+            </div>
           </div>
-          <div class="card-credit-value" id="card-itau-val">R$ 2.292,09</div>
-          <div class="card-credit-footer">
-            <span>Fatura Aberta</span>
-            <span class="card-pct" id="card-itau-pct">42.2%</span>
+
+          <!-- Itaú Uniclass -->
+          <div class="card-credit-mini itau-card">
+            <div class="card-credit-header">
+              <span class="card-badge itau">🟠 Itaú Uniclass</span>
+              <span class="card-flag" id="card-itau-count">16 compras</span>
+            </div>
+            <div class="card-credit-value" id="card-itau-val">R$ 1.826,40</div>
+            <div class="card-credit-footer">
+              <span>C/C Itaú</span>
+              <span class="card-pct" id="card-itau-pct">60.3%</span>
+            </div>
+          </div>
+
+          <!-- Empório Alex -->
+          <div class="card-credit-mini emporio-card">
+            <div class="card-credit-header">
+              <span class="card-badge emporio">🛍️ Empório Alex</span>
+              <span class="card-flag" id="card-emporio-count">1 compra</span>
+            </div>
+            <div class="card-credit-value" id="card-emporio-val">R$ 104,68</div>
+            <div class="card-credit-footer">
+              <span>C/C Empório Alex</span>
+              <span class="card-pct" id="card-emporio-pct">3.5%</span>
+            </div>
+          </div>
+
+          <!-- Nubank -->
+          <div class="card-credit-mini nubank-card">
+            <div class="card-credit-header">
+              <span class="card-badge nubank">💜 Nubank Roxinho</span>
+              <span class="card-flag" id="card-nubank-count">1 compra</span>
+            </div>
+            <div class="card-credit-value" id="card-nubank-val">R$ 45,55</div>
+            <div class="card-credit-footer">
+              <span>C/C Nubank</span>
+              <span class="card-pct" id="card-nubank-pct">1.5%</span>
+            </div>
           </div>
         </div>
+      </section>
 
-        <!-- Card 3: Empório Alex -->
-        <div class="card-credit-mini emporio-card">
-          <div class="card-credit-header">
-            <span class="card-badge emporio">🛍️ Empório Alex</span>
-            <span class="card-flag" id="card-emporio-count">1 compra</span>
-          </div>
-          <div class="card-credit-value" id="card-emporio-val">R$ 104,68</div>
-          <div class="card-credit-footer">
-            <span>Fatura Aberta</span>
-            <span class="card-pct" id="card-emporio-pct">1.9%</span>
-          </div>
-        </div>
-
-        <!-- Card 4: Nubank -->
-        <div class="card-credit-mini nubank-card">
-          <div class="card-credit-header">
-            <span class="card-badge nubank">💜 Nubank Roxinho</span>
-            <span class="card-flag" id="card-nubank-count">2 compras</span>
-          </div>
-          <div class="card-credit-value" id="card-nubank-val">R$ 48,44</div>
-          <div class="card-credit-footer">
-            <span>Fatura Aberta</span>
-            <span class="card-pct" id="card-nubank-pct">0.9%</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- 2. SOBRA MENSAL ATUAL & GRÁFICO DE ACOMPANHAMENTO DE LIMITES (ORÇAMENTO ANUAL) -->
-      <div class="limits-grid">
-        
-        <!-- Card A: Sobra Mensal Atual & Médias dos Meses Futuros -->
-        <div class="kpi-card monthly-surplus-card">
+      <!-- 2. CARD DA SOBRA DO MÊS ATUAL (OUTUBRO) -->
+      <section style="margin-top: 24px;">
+        <div class="kpi-card monthly-surplus-card" style="border: 1px solid rgba(16, 185, 129, 0.3); background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(15, 23, 42, 0.8) 100%);">
           <div class="kpi-header">
             <div>
-              <span class="kpi-title" style="color: #34d399; font-weight: 700;">💵 Sobra Mensal Atual</span>
-              <div style="font-size: 11px; color: var(--text-secondary); margin-top: 2px;" id="lblCurrentMonth">Mês Vigente (Agosto)</div>
+              <span class="kpi-title" style="color: #34d399; font-weight: 700; font-size: 15px;">💵 Sobra do Mês Atual (Outubro)</span>
+              <div style="font-size: 12px; color: var(--text-secondary); margin-top: 3px;" id="lblCurrentMonth">Mês Vigente: Outubro 2026</div>
             </div>
-            <div class="kpi-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">✨</div>
+            <div class="kpi-icon" style="background: rgba(16, 185, 129, 0.2); color: #10b981; font-size: 18px;">✨</div>
           </div>
 
-          <div class="kpi-value" id="currentMonthlySurplus" style="font-size: 32px; color: #10b981; margin: 8px 0 4px 0;">
-            R$ 223,76
-          </div>
-          <div class="kpi-sub" style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 8px;">
-            <span>Média de sobra acumulada:</span>
-            <strong id="avgMonthlySurplus" style="color: #ffffff;">R$ 1.981,53 / mês</strong>
-          </div>
-
-          <!-- Mini Resumo do Mês Vigente -->
-          <div class="monthly-breakdown-mini">
-            <div class="m-item">
-              <span>Receita do Mês</span>
-              <strong id="mRecVal" style="color: #10b981;">R$ 9.178,74</strong>
+          <div style="display: flex; align-items: baseline; gap: 12px; margin: 12px 0 16px 0;">
+            <div class="kpi-value" id="currentMonthlySurplus" style="font-size: 38px; color: #10b981; margin: 0; font-weight: 800;">
+              R$ 1.631,56
             </div>
-            <div class="m-item">
-              <span>Fixas Pagas</span>
-              <strong id="mFixVal" style="color: #f87171;">R$ 6.177,86</strong>
-            </div>
-            <div class="m-item">
-              <span>Variáveis</span>
-              <strong id="mVarVal" style="color: #fbbf24;">R$ 1.577,12</strong>
-            </div>
-            <div class="m-item">
-              <span>Investimentos</span>
-              <strong id="mInvVal" style="color: #60a5fa;">R$ 1.200,00</strong>
-            </div>
+            <span style="font-size: 13px; color: #34d399; font-weight: 600; background: rgba(16, 185, 129, 0.15); padding: 3px 10px; border-radius: 12px;">
+              20.5% da Receita Poupada
+            </span>
           </div>
 
-          <!-- Box de Médias dos Meses Futuros (Setembro a Dezembro) -->
-          <div style="margin-top: 12px; padding: 10px 12px; background: rgba(15, 23, 42, 0.6); border: 1px dashed rgba(59, 130, 246, 0.3); border-radius: 8px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-              <span style="font-size: 11px; font-weight: 700; color: #60a5fa; text-transform: uppercase; letter-spacing: 0.5px;">🔮 Médias Próximos Meses (Set–Dez)</span>
-              <span style="font-size: 10px; color: var(--text-muted);" id="lblFutureMonthsRange">4 meses</span>
-            </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; text-align: center;">
-              <div style="background: rgba(255,255,255,0.02); padding: 5px; border-radius: 6px;">
-                <div style="font-size: 9px; color: var(--text-muted); text-transform: uppercase;">Ganhos Médios</div>
-                <strong id="futAvgIncome" style="font-size: 11px; color: #34d399;">R$ 9.458,59</strong>
-              </div>
-              <div style="background: rgba(255,255,255,0.02); padding: 5px; border-radius: 6px;">
-                <div style="font-size: 9px; color: var(--text-muted); text-transform: uppercase;">Gastos Médios</div>
-                <strong id="futAvgExpenses" style="font-size: 11px; color: #f87171;">R$ 5.543,00</strong>
-              </div>
-              <div style="background: rgba(255,255,255,0.02); padding: 5px; border-radius: 6px;">
-                <div style="font-size: 9px; color: var(--text-muted); text-transform: uppercase;">Sobra Média</div>
-                <strong id="futAvgSurplus" style="font-size: 11px; color: #38bdf8;">R$ 2.915,59</strong>
-              </div>
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 10px; margin-top: 6px; padding-top: 4px; border-top: 1px solid rgba(255,255,255,0.05);">
-              <span style="color: var(--text-secondary);">Sobra Acumulada Prevista (I59):</span>
-              <strong id="futTotalSurplus" style="color: #fbbf24; font-weight: 700;">R$ 11.886,11</strong>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card B: Gráfico de Limites Estabelecidos Orçamento Anual -->
-        <div class="limits-chart-card">
-          <div class="chart-header" style="margin-bottom: 8px;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; background: rgba(0, 0, 0, 0.2); padding: 14px 16px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.05);">
             <div>
-              <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 2px;">🎯 Limites Orçados vs Gastos Reais</h3>
-              <p style="font-size: 11px; color: var(--text-secondary);">Tetos e médias estabelecidas por categoria no Orçamento Anual</p>
+              <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 2px;">Receita Total</div>
+              <strong id="mRecVal" style="color: #10b981; font-size: 15px;">R$ 7.973,89</strong>
             </div>
-            <span class="badge-status-limit" id="limitStatusBadge">🛡️ Dentro do Teto</span>
+            <div>
+              <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 2px;">Despesas Fixas (Essenciais)</div>
+              <strong id="mFixVal" style="color: #f87171; font-size: 15px;">R$ 3.960,54</strong>
+            </div>
+            <div>
+              <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 2px;">Despesas Variáveis (Estilo)</div>
+              <strong id="mVarVal" style="color: #fbbf24; font-size: 15px;">R$ 1.381,79</strong>
+            </div>
+            <div>
+              <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 2px;">Investimentos (Pai Obra)</div>
+              <strong id="mInvVal" style="color: #60a5fa; font-size: 15px;">R$ 1.000,00</strong>
+            </div>
           </div>
+        </div>
+      </section>
 
-          <div class="chart-body" style="height: 175px; position: relative;">
-            <canvas id="limitsComparisonChart"></canvas>
+      <!-- 3. DIVISÃO POR CATEGORIAS: QUANTO TENHO DE MARGEM EM CADA CATEGORIA (ORÇAMENTO 2026) -->
+      <section class="category-margins-section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h3 style="font-size: 18px; font-weight: 700; color: #f8fafc; display: flex; align-items: center; gap: 8px; margin: 0 0 4px 0;">
+              <span>🎯</span> Margem de Gastos por Categoria (Orçamento 2026)
+            </h3>
+            <p style="font-size: 13px; color: var(--text-secondary); margin: 0;">
+              Média/Teto previsto em <strong>Outubro</strong> vs Gastos realizados na fatura de Outubro.
+            </p>
           </div>
-
-          <div class="limits-pills-row" id="limitsPillsRow">
-            <!-- Pílulas de progresso por categoria geradas via JS -->
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button class="filter-margin-btn active" data-filter="all">Todas</button>
+            <button class="filter-margin-btn" data-filter="available">Com Margem Disponível</button>
+            <button class="filter-margin-btn" data-filter="exceeded">No Limite / Estouradas</button>
           </div>
         </div>
 
-      </div>
-
-      <!-- Título de Seção: Totais Anuais Acumulados -->
-      <div style="margin: 6px 0 14px 0;">
-        <h3 style="font-size: 14px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">
-          📊 Orçamento Anual Consolidado
-        </h3>
-      </div>
-
-      <!-- Grid de KPIs Principais -->
-      <div class="kpi-grid">
-        <div class="kpi-card kpi-income">
-          <div class="kpi-header">
-            <span class="kpi-title">Receitas Totais</span>
-            <div class="kpi-icon">💰</div>
-          </div>
-          <div class="kpi-value" id="kpi-receita">R$ 0,00</div>
-          <div class="kpi-sub">Total anual orçado</div>
+        <div id="categoryMarginsGrid" class="category-margins-grid">
+          <!-- Renderizado via JavaScript com dados de Outubro -->
         </div>
-
-        <div class="kpi-card kpi-fixed">
-          <div class="kpi-header">
-            <span class="kpi-title">Despesas Fixas</span>
-            <div class="kpi-icon">🏠</div>
-          </div>
-          <div class="kpi-value" id="kpi-fixa">R$ 0,00</div>
-          <div class="kpi-sub">
-            <span class="badge-pct" id="badge-fixa">0%</span>
-            <span>da receita anual</span>
-          </div>
-        </div>
-
-        <div class="kpi-card kpi-variable">
-          <div class="kpi-header">
-            <span class="kpi-title">Despesas Variáveis</span>
-            <div class="kpi-icon">🛍️</div>
-          </div>
-          <div class="kpi-value" id="kpi-variavel">R$ 0,00</div>
-          <div class="kpi-sub">
-            <span class="badge-pct" id="badge-variavel">0%</span>
-            <span>estilo de vida / cartão</span>
-          </div>
-        </div>
-
-        <div class="kpi-card kpi-invest">
-          <div class="kpi-header">
-            <span class="kpi-title">Investimentos</span>
-            <div class="kpi-icon">📈</div>
-          </div>
-          <div class="kpi-value" id="kpi-invest">R$ 0,00</div>
-          <div class="kpi-sub">
-            <span class="badge-pct" id="badge-invest">0%</span>
-            <span>aportes acumulados</span>
-          </div>
-        </div>
-
-        <div class="kpi-card kpi-balance">
-          <div class="kpi-header">
-            <span class="kpi-title">Sobra Líquida</span>
-            <div class="kpi-icon">✨</div>
-          </div>
-          <div class="kpi-value" id="kpi-sobra">R$ 0,00</div>
-          <div class="kpi-sub">Economia projetada no ano</div>
-        </div>
-      </div>
-
-      <!-- Gráficos de Fluxo de Caixa e Distribuição -->
-      <div class="charts-grid">
-        <div class="chart-card">
-          <div class="chart-header">
-            <h3>Fluxo de Caixa Mensal (Receitas vs Despesas)</h3>
-          </div>
-          <div class="chart-body">
-            <canvas id="cashFlowChart"></canvas>
-          </div>
-        </div>
-
-        <div class="chart-card">
-          <div class="chart-header">
-            <h3>Distribuição Percentual dos Recursos</h3>
-          </div>
-          <div class="chart-body">
-            <canvas id="distributionChart"></canvas>
-          </div>
-        </div>
-      </div>
-
-      <!-- Tabela Detalhada de Orçamento Mês a Mês -->
-      <div class="table-container">
-        <div class="table-header-flex">
-          <h3>Detalhamento Mensal do Orçamento</h3>
-          <span style="font-size: 12px; color: var(--text-muted);">Calculado segundo as fórmulas da planilha (C15, C35, C50, C57 e C59)</span>
-        </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Mês</th>
-              <th>Receitas</th>
-              <th>Despesas Fixas</th>
-              <th>Despesas Variáveis</th>
-              <th>Investimentos</th>
-              <th>Sobra Líquida</th>
-            </tr>
-          </thead>
-          <tbody id="monthlyBudgetTbody">
-            <!-- Gerado via JS -->
-          </tbody>
-        </table>
-      </div>
+      </section>
     </main>
 
     <!-- ABA 2: NOVO LANÇAMENTO -->
@@ -509,7 +393,7 @@
       <div class="kpi-grid">
         <div class="kpi-card kpi-variable">
           <div class="kpi-header">
-            <span class="kpi-title">Fatura Atual (Agosto)</span>
+            <span class="kpi-title" id="lblCardTabInvoiceTitle">Fatura Atual (Outubro)</span>
             <div class="kpi-icon">💳</div>
           </div>
           <div class="kpi-value" id="cardInvoiceTotal">R$ 5.425,71</div>
@@ -607,7 +491,7 @@
       <div class="table-container">
         <div class="table-header-flex">
           <div>
-            <h3>Lançamentos da Fatura de Agosto</h3>
+            <h3 id="lblCardPurchasesHeading">Lançamentos da Fatura de Outubro</h3>
             <span style="font-size: 12px; color: var(--text-muted);">Vínculo direto com as categorias do Orçamento Anual</span>
           </div>
           <div style="display: flex; gap: 8px;">
@@ -794,6 +678,52 @@
           </button>
         </div>
 
+        
+        <!-- SINCRONIZACAO COM PLANILHA GOOGLE -->
+        <div style="background: rgba(16, 185, 129, 0.06); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 12px; padding: 22px; margin-bottom: 28px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+            <h3 style="margin: 0; font-size: 16px; color: #34d399; display: flex; align-items: center; gap: 8px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+              Sincronização Online com Planilha Google (Google Sheets)
+            </h3>
+            <span id="sheetsStatusBadge" style="font-size: 11px; padding: 4px 10px; border-radius: 12px; background: rgba(100, 116, 139, 0.2); color: #94a3b8; font-weight: 600;">Não configurado</span>
+          </div>
+          <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 16px;">
+            Conecte este Dashboard diretamente à sua planilha no Google Drive. Cada despesa, receita ou fatura de cartão adicionada aqui será gravada em tempo real na sua planilha online!
+          </p>
+
+          <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;">
+            <label style="font-size: 12px; font-weight: 600; color: #e2e8f0;" for="sheetsWebhookUrlInput">URL do Webhook Google Apps Script (/exec):</label>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <input type="url" id="sheetsWebhookUrlInput" class="form-input" placeholder="https://script.google.com/macros/s/.../exec" style="flex: 1; min-width: 260px;">
+              <button id="btnSaveSheetsUrl" class="btn btn-primary" style="background: #10b981; border-color: #059669; font-size: 13px;">Salvar URL</button>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px;">
+            <button id="btnTestSheetsConnection" class="btn btn-secondary" style="font-size: 12px;">
+              ⚡ Testar Conexão
+            </button>
+            <button id="btnSyncAllToSheets" class="btn btn-secondary" style="font-size: 12px; border-color: rgba(56, 189, 248, 0.4); color: #38bdf8;">
+              🔄 Enviar Todos os Lançamentos para a Planilha Google
+            </button>
+          </div>
+
+          <div id="sheetsFeedbackBox" style="display: none; padding: 12px 14px; border-radius: 8px; font-size: 12px; margin-bottom: 16px;"></div>
+
+          <details style="background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 14px;">
+            <summary style="font-size: 12px; font-weight: 600; color: #38bdf8; cursor: pointer;">👉 Como ativar a sincronização na sua Planilha Google (1 minuto)</summary>
+            <ol style="font-size: 12px; color: var(--text-secondary); padding-left: 20px; line-height: 1.8; margin-top: 10px;">
+              <li>Abra sua planilha no Google Sheets (Google Drive).</li>
+              <li>No menu do topo da planilha, clique em <strong>Extensões > Apps Script</strong>.</li>
+              <li>Cole o conteúdo do arquivo pronto <code>planilha/google_apps_script.js</code> (já disponível neste projeto).</li>
+              <li>Clique no botão azul <strong>Implantar > Nova implantação</strong>.</li>
+              <li>Selecione tipo <strong>App da Web</strong>, configure acesso como <strong>"Qualquer pessoa" (Anyone)</strong> e clique em Implantar.</li>
+              <li>Copie a URL gerada (termina com <code>/exec</code>), cole no campo acima e clique em <strong>Salvar URL</strong>.</li>
+            </ol>
+          </details>
+        </div>
+
         <hr style="border: 0; border-top: 1px solid var(--border-color); margin-bottom: 24px;">
 
         <h3 style="font-size: 16px; margin-bottom: 12px; color: #f59e0b;">🌐 Instruções de Deploy na HostGator</h3>
@@ -837,6 +767,7 @@
   <script src="js/xlsx.full.min.js"></script>
 
   <!-- Scripts da Aplicação -->
+  <script src="js/sheets-sync.js"></script>
   <script src="js/storage.js"></script>
   <script src="js/calculations.js"></script>
   <script src="js/charts.js"></script>
