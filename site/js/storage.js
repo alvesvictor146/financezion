@@ -4186,6 +4186,66 @@ const StorageEngine = {
     });
   },
 
+  // Adiciona compra de cartao em cartaoOutubro e cartaoAgosto, atualizando totais e orcamento imediatamente
+  addCardPurchase(appState, item) {
+    if (!appState) return null;
+
+    // 1. Assegura existencia de cartaoOutubro
+    if (!appState.cartaoOutubro) {
+      appState.cartaoOutubro = (typeof DEFAULT_FINANCIAL_DATA !== 'undefined' && DEFAULT_FINANCIAL_DATA.cartaoOutubro)
+        ? JSON.parse(JSON.stringify(DEFAULT_FINANCIAL_DATA.cartaoOutubro))
+        : { titulo: 'Fatura Outubro - vencimento 10/10', mes: 'Outubro', compras: [], total: 0, limiteDisponivel: 3878.89 };
+    }
+    if (!Array.isArray(appState.cartaoOutubro.compras)) {
+      appState.cartaoOutubro.compras = [];
+    }
+
+    // 2. Formata objeto da compra
+    const val = Number(item.euPago !== undefined ? item.euPago : (item.valor !== undefined ? item.valor : item.val)) || 0;
+    const cardPurchase = {
+      id: item.id || ('c-out-' + Date.now()),
+      linha: appState.cartaoOutubro.compras.length + 4,
+      oQue: item.oQue || item.categoria || item.cat || 'Outros',
+      euPago: val,
+      valor: val,
+      parcelaAtual: item.parcelaAtual || '1',
+      numParcelas: item.numParcelas || '1',
+      motivo: item.motivo || item.descricao || item.desc || 'Compra no cartão',
+      cartao: item.cartao || item.formaPagamento || item.paymentMethod || 'C/C BB',
+      origem: item.origem || 'app'
+    };
+
+    // 3. Adiciona em cartaoOutubro e recalcula total
+    appState.cartaoOutubro.compras.unshift(cardPurchase);
+    appState.cartaoOutubro.total = Math.round((appState.cartaoOutubro.compras.reduce((sum, i) => sum + (Number(i.euPago !== undefined ? i.euPago : i.valor) || 0), 0) + Number.EPSILON) * 100) / 100;
+
+    // 4. Mantem cartaoAgosto sincronizado
+    if (!appState.cartaoAgosto) appState.cartaoAgosto = { compras: [], total: 0 };
+    if (!Array.isArray(appState.cartaoAgosto.compras)) appState.cartaoAgosto.compras = [];
+    appState.cartaoAgosto.compras.unshift({ ...cardPurchase });
+    appState.cartaoAgosto.total = Math.round((appState.cartaoAgosto.compras.reduce((sum, i) => sum + (Number(i.euPago !== undefined ? i.euPago : i.valor) || 0), 0) + Number.EPSILON) * 100) / 100;
+
+    // 5. Impacta a despesa variavel e sobra de Outubro no Orcamento 2026
+    const yr = appState.selectedYear || 2026;
+    const currentYearData = appState.years ? appState.years[yr] : null;
+    if (currentYearData && Array.isArray(currentYearData.months)) {
+      const targetMonth = currentYearData.months.find(m => (m.name || '').toLowerCase() === 'outubro');
+      if (targetMonth) {
+        targetMonth.variavel = Math.round(((targetMonth.variavel || 0) + val + Number.EPSILON) * 100) / 100;
+        const rec = targetMonth.receita || 0;
+        targetMonth.pctVar = rec > 0 ? ((targetMonth.variavel || 0) / rec) * 100 : 0;
+        targetMonth.sobra = Math.round((rec - (targetMonth.fixa || 0) - (targetMonth.variavel || 0) - (targetMonth.invest || 0) + Number.EPSILON) * 100) / 100;
+      }
+    }
+
+    // 6. Recalcula vinculos de limites e categorias
+    if (typeof FinancialEngine !== 'undefined' && typeof FinancialEngine.recalculateBudgetLinkage === 'function') {
+      FinancialEngine.recalculateBudgetLinkage(appState);
+    }
+
+    return cardPurchase;
+  },
+
   load() {
     const key = this.getStorageKey();
     try {

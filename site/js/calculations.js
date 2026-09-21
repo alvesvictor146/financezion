@@ -216,37 +216,53 @@ const FinancialEngine = {
   },
 
   // Processa o detalhamento dos 4 cartões de crédito da fatura
+  // Processa o detalhamento dos 4 cartoes de credito da fatura (Outubro / Fatura Ativa)
   processCreditCardsBreakdown(cartao) {
     const defaultCards = [
-      { id: 'bb', nome: 'Banco do Brasil', apelido: 'C/C BB', total: 2980.50, count: 62, cor: '#f59e0b', pct: 54.9 },
-      { id: 'itau', nome: 'Itaú Uniclass', apelido: 'C/C Itaú', total: 2292.09, count: 19, cor: '#f97316', pct: 42.2 },
-      { id: 'emporio', nome: 'Empório Alex', apelido: 'C/C Empório Alex', total: 104.68, count: 1, cor: '#ec4899', pct: 1.9 },
-      { id: 'nubank', nome: 'Nubank Roxinho', apelido: 'C/C Nubank', total: 48.44, count: 2, cor: '#8b5cf6', pct: 0.9 }
+      { id: 'bb', nome: 'Banco do Brasil', apelido: 'C/C BB', total: 1049.79, count: 19, cor: '#f59e0b', pct: 34.7 },
+      { id: 'itau', nome: 'Itaú Uniclass', apelido: 'C/C Itaú', total: 1826.40, count: 16, cor: '#f97316', pct: 60.3 },
+      { id: 'emporio', nome: 'Empório Alex', apelido: 'C/C Empório Alex', total: 104.68, count: 1, cor: '#ec4899', pct: 3.5 },
+      { id: 'nubank', nome: 'Nubank Roxinho', apelido: 'C/C Nubank', total: 45.55, count: 1, cor: '#8b5cf6', pct: 1.5 }
     ];
 
-    if (!cartao || !cartao.compras || !cartao.compras.length) {
+    if (!cartao || !Array.isArray(cartao.compras) || !cartao.compras.length) {
       return defaultCards;
     }
 
-    const map = {};
+    const map = {
+      bb: { total: 0, count: 0 },
+      itau: { total: 0, count: 0 },
+      emporio: { total: 0, count: 0 },
+      nubank: { total: 0, count: 0 }
+    };
+
+    function resolveCardKey(c) {
+      const raw = ((c.cartao || c.estabelecimento || '') + '').toLowerCase();
+      if (raw.includes('itau') || raw.includes('itaú') || raw.includes('uniclass')) return 'itau';
+      if (raw.includes('nu') || raw.includes('nubank') || raw.includes('roxinho')) return 'nubank';
+      if (raw.includes('alex') || raw.includes('empório') || raw.includes('emporio')) return 'emporio';
+      return 'bb';
+    }
+
     cartao.compras.forEach(c => {
-      const cardName = (c.cartao || (c.estabelecimento && c.estabelecimento.includes('Nubank') ? 'C/C Nubank' : (c.estabelecimento && c.estabelecimento.includes('Alex') ? 'C/C Empório Alex' : (c.estabelecimento && c.estabelecimento.includes('Itaú') ? 'C/C Itaú' : 'C/C BB')))).trim();
-      if (!map[cardName]) map[cardName] = { total: 0, count: 0 };
-      map[cardName].total += Number(c.valor) || 0;
-      map[cardName].count += 1;
+      const key = resolveCardKey(c);
+      const val = Number(c.euPago !== undefined ? c.euPago : c.valor) || 0;
+      if (!map[key]) map[key] = { total: 0, count: 0 };
+      map[key].total += val;
+      map[key].count += 1;
     });
 
-    const totalGeral = Object.values(map).reduce((sum, item) => sum + item.total, 0) || 5425.71;
+    const totalGeral = Object.values(map).reduce((sum, item) => sum + item.total, 0);
 
     return defaultCards.map(def => {
-      const found = map[def.apelido] || map[def.nome];
-      const tot = found ? found.total : def.total;
-      const cnt = found ? found.count : def.count;
+      const found = map[def.id];
+      const tot = found ? Math.round((found.total + Number.EPSILON) * 100) / 100 : 0;
+      const cnt = found ? found.count : 0;
       return {
         ...def,
         total: tot,
         count: cnt,
-        pct: totalGeral > 0 ? (tot / totalGeral) * 100 : def.pct
+        pct: totalGeral > 0 ? (tot / totalGeral) * 100 : 0
       };
     });
   },

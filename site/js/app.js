@@ -427,48 +427,38 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       appState.transacoes.unshift(newTx);
 
-      // Se foi pago com um dos 4 cartões de crédito, vincula diretamente à fatura do cartão
-      if (['C/C BB', 'C/C Itaú', 'C/C Nubank', 'C/C Empório Alex'].includes(paymentMethod)) {
-        if (!appState.cartaoAgosto) appState.cartaoAgosto = { compras: [], total: 0 };
-        if (!Array.isArray(appState.cartaoAgosto.compras)) appState.cartaoAgosto.compras = [];
+      // Se foi pago com um dos 4 cartoes de credito, lanca na fatura de Outubro e atualiza os cards da home
+      let cardPurchase = null;
+      const isCreditCard = ['C/C BB', 'C/C Itaú', 'C/C Nubank', 'C/C Empório Alex'].some(c => 
+        paymentMethod.toLowerCase().includes(c.toLowerCase().replace('c/c ', ''))
+      );
 
-        appState.cartaoAgosto.compras.unshift({
-          id: 'c-' + Date.now(),
-          linha: appState.cartaoAgosto.compras.length + 4,
-          oQue: cat,
-          euPago: val,
-          valor: val,
-          parcelaAtual: '1',
-          numParcelas: '1',
-          motivo: desc,
-          cartao: paymentMethod
-        });
-        appState.cartaoAgosto.total = appState.cartaoAgosto.compras.reduce((sum, i) => sum + (Number(i.euPago || i.valor) || 0), 0);
-
-        // Recalcula limites e médias do orçamento vinculado
-        if (typeof FinancialEngine !== 'undefined' && typeof FinancialEngine.recalculateBudgetLinkage === 'function') {
-          FinancialEngine.recalculateBudgetLinkage(appState);
+      if (isCreditCard) {
+        if (typeof StorageEngine !== 'undefined' && typeof StorageEngine.addCardPurchase === 'function') {
+          cardPurchase = StorageEngine.addCardPurchase(appState, {
+            categoria: cat,
+            euPago: val,
+            valor: val,
+            descricao: desc,
+            formaPagamento: paymentMethod,
+            origem: 'app'
+          });
         }
-      }
+      } else {
+        const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+        const targetMonthName = monthNames[new Date(date + 'T12:00:00').getMonth()] || 'Outubro';
+        const currentYearData = appState.years[appState.selectedYear];
+        if (currentYearData && Array.isArray(currentYearData.months)) {
+          const targetMonth = currentYearData.months.find(m => m.name.toLowerCase() === targetMonthName.toLowerCase());
+          if (targetMonth) {
+            if (type === 'receita') targetMonth.receita = Math.round(((targetMonth.receita || 0) + val + Number.EPSILON) * 100) / 100;
+            else if (type === 'fixa') targetMonth.fixa = Math.round(((targetMonth.fixa || 0) + val + Number.EPSILON) * 100) / 100;
+            else if (type === 'variavel') targetMonth.variavel = Math.round(((targetMonth.variavel || 0) + val + Number.EPSILON) * 100) / 100;
+            else if (type === 'invest') targetMonth.invest = Math.round(((targetMonth.invest || 0) + val + Number.EPSILON) * 100) / 100;
 
-      // Impacta o mês correspondente no orçamento anual ativo (busca por nome para compatibilidade com qualquer ano)
-      const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-      const targetMonthName = monthNames[new Date(date + 'T12:00:00').getMonth()];
-      const currentYearData = appState.years[appState.selectedYear];
-      if (currentYearData && Array.isArray(currentYearData.months)) {
-        const targetMonth = currentYearData.months.find(m => m.name.toLowerCase() === targetMonthName.toLowerCase());
-        if (targetMonth) {
-          if (type === 'receita') targetMonth.receita = Math.round(((targetMonth.receita || 0) + val + Number.EPSILON) * 100) / 100;
-          else if (type === 'fixa') targetMonth.fixa = Math.round(((targetMonth.fixa || 0) + val + Number.EPSILON) * 100) / 100;
-          else if (type === 'variavel') targetMonth.variavel = Math.round(((targetMonth.variavel || 0) + val + Number.EPSILON) * 100) / 100;
-          else if (type === 'invest') targetMonth.invest = Math.round(((targetMonth.invest || 0) + val + Number.EPSILON) * 100) / 100;
-
-          // Recalcula sobra e porcentagens do mês imediatamente
-          const rec = targetMonth.receita || 0;
-          targetMonth.pctFixa = rec > 0 ? ((targetMonth.fixa || 0) / rec) * 100 : 0;
-          targetMonth.pctVar = rec > 0 ? ((targetMonth.variavel || 0) / rec) * 100 : 0;
-          targetMonth.pctInv = rec > 0 ? ((targetMonth.invest || 0) / rec) * 100 : 0;
-          targetMonth.sobra = Math.round((rec - (targetMonth.fixa || 0) - (targetMonth.variavel || 0) - (targetMonth.invest || 0) + Number.EPSILON) * 100) / 100;
+            const rec = targetMonth.receita || 0;
+            targetMonth.sobra = Math.round((rec - (targetMonth.fixa || 0) - (targetMonth.variavel || 0) - (targetMonth.invest || 0) + Number.EPSILON) * 100) / 100;
+          }
         }
       }
 
@@ -477,6 +467,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Sincronização em tempo real com a Planilha Google online (se configurada)
       if (typeof GoogleSheetsSync !== 'undefined' && GoogleSheetsSync.isConfigured()) {
         GoogleSheetsSync.syncTransaction(newTx);
+        if (cardPurchase) GoogleSheetsSync.syncCardPurchase(cardPurchase);
       }
       populateCategoryFilter();
       renderAll();
