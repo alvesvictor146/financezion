@@ -1269,3 +1269,384 @@ input:focus, select:focus, textarea:focus {
   color: #38bdf8;
   font-weight: 600;
 }
+
+
+/* =========================================================
+   VOICE ASSISTANT & SPEECH INPUT STYLES (Lançamento por Voz)
+   ========================================================= */
+
+/* Botão de Voz no Top Header */
+.btn-voice {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(99, 102, 241, 0.2));
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  color: #38bdf8;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-voice:hover {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.28), rgba(99, 102, 241, 0.35));
+  border-color: #38bdf8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
+  color: #ffffff;
+}
+
+.btn-voice .pulse-mic {
+  font-size: 16px;
+  animation: micGlow 2s infinite ease-in-out;
+}
+
+@keyframes micGlow {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(56, 189, 248, 0.4)); }
+  50% { transform: scale(1.15); filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.8)); }
+}
+
+/* Floating Action Button (FAB) de Voz no canto inferior direito */
+.voice-fab {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0284c7, #6366f1);
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 10px 25px -4px rgba(2, 132, 199, 0.5), 0 0 20px rgba(99, 102, 241, 0.3);
+  z-index: 990;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.voice-fab:hover {
+  transform: scale(1.1) translateY(-3px);
+  box-shadow: 0 14px 30px -4px rgba(2, 132, 199, 0.7), 0 0 25px rgba(99, 102, 241, 0.5);
+  border-color: #ffffff;
+}
+
+.voice-fab:active {
+  transform: scale(0.95);
+}
+
+/* Banner de voz na aba de Novo Lançamento */
+.voice-quick-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.8));
+  border: 1px dashed rgba(56, 189, 248, 0.35);
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin-bottom: 22px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.voice-banner-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.voice-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #38bdf8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.voice-banner-info p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.btn-voice-secondary {
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: #38bdf8;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+}
+
+.btn-voice-secondary:hover {
+  background: rgba(56, 189, 248, 0.22);
+  border-color: #38bdf8;
+  color: #ffffff;
+}
+
+/* Modal de Voz */
+.voice-modal-box {
+  background: #0f172a;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 20px;
+  padding: 28px;
+  max-width: 520px;
+  width: 100%;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 35px rgba(56, 189, 248, 0.15);
+  animation: modalFadeIn 0.25s ease-out;
+  position: relative;
+}
+
+.voice-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 14px;
+}
+
+.voice-modal-header h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+.voice-modal-close {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 22px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.voice-modal-close:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Microfone Grande Animado */
+.voice-mic-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 16px 0 24px 0;
+}
+
+.btn-mic-big {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0284c7, #3b82f6);
+  border: 4px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  font-size: 34px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 10px 25px -4px rgba(2, 132, 199, 0.5);
+}
+
+.btn-mic-big:hover {
+  transform: scale(1.06);
+}
+
+.btn-mic-big.recording {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  box-shadow: 0 0 30px rgba(239, 68, 68, 0.7);
+  animation: recordingPulse 1.4s infinite;
+}
+
+@keyframes recordingPulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+  50% { transform: scale(1.08); box-shadow: 0 0 0 16px rgba(239, 68, 68, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+/* Ondas sonoras / Equalizer */
+.voice-waves {
+  display: none;
+  align-items: center;
+  gap: 4px;
+  height: 24px;
+  margin-top: 14px;
+}
+
+.voice-wave-bar {
+  width: 4px;
+  background: #38bdf8;
+  border-radius: 2px;
+  animation: waveAnimation 1s infinite ease-in-out;
+}
+
+.voice-wave-bar:nth-child(1) { height: 8px; animation-delay: 0.1s; }
+.voice-wave-bar:nth-child(2) { height: 16px; animation-delay: 0.2s; }
+.voice-wave-bar:nth-child(3) { height: 24px; animation-delay: 0.3s; }
+.voice-wave-bar:nth-child(4) { height: 18px; animation-delay: 0.4s; }
+.voice-wave-bar:nth-child(5) { height: 10px; animation-delay: 0.5s; }
+
+@keyframes waveAnimation {
+  0%, 100% { transform: scaleY(0.4); opacity: 0.5; }
+  50% { transform: scaleY(1); opacity: 1; }
+}
+
+.voice-status-text {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-top: 12px;
+  text-align: center;
+  font-weight: 500;
+  min-height: 20px;
+}
+
+/* Balão da Transcrição Falada */
+.voice-transcript-bubble {
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 14px 16px;
+  color: #f8fafc;
+  font-size: 14px;
+  font-style: italic;
+  text-align: center;
+  margin-bottom: 20px;
+  line-height: 1.5;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Preview dos dados estruturados */
+.voice-preview-card {
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 20px;
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+.voice-preview-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #38bdf8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.voice-preview-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.voice-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.voice-field.full {
+  grid-column: 1 / -1;
+}
+
+.voice-field label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.voice-field input, .voice-field select {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: #ffffff;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.voice-field input:focus, .voice-field select:focus {
+  border-color: #38bdf8;
+}
+
+.voice-modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.voice-modal-btn-row {
+  display: flex;
+  gap: 10px;
+}
+
+.voice-modal-btn-row .btn {
+  flex: 1;
+  justify-content: center;
+  padding: 12px;
+}
+
+/* Dicas de comando */
+.voice-tips {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.5;
+}
+
+.voice-tips strong {
+  color: var(--text-secondary);
+}
+
+/* Tag de Voz na Tabela de Lançamentos */
+.tag-voice {
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  color: #38bdf8;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-left: 6px;
+}

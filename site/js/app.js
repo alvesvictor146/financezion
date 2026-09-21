@@ -545,7 +545,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return `
         <tr>
           <td>${escapeHtml(tx.data)}</td>
-          <td><strong>${escapeHtml(tx.descricao)}</strong></td>
+          <td><strong>${escapeHtml(tx.descricao)}</strong>${tx.origem === "voz" ? ' <span class="tag tag-voice" title="Lançamento por Comando de Voz">🎙️ Voz</span>' : ''}</td>
           <td><span class="tag ${tagClass}">${tagLabel}</span></td>
           <td>${escapeHtml(tx.categoria)}</td>
           <td style="font-weight: 700; color: ${tx.tipo === 'receita' ? '#10b981' : '#f8fafc'}">${FinancialEngine.formatCurrency(tx.valor)}</td>
@@ -1140,4 +1140,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // Render inicial completo
   populateCategoryFilter();
   renderAll();
+
+  // Exportar para integração com o VoiceInputModule e Console
+  window.appState = appState;
+  window.renderAll = renderAll;
+  window.showToast = showToast;
+  window.populateCategoryFilter = populateCategoryFilter;
 });

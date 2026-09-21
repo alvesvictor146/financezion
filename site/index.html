@@ -127,6 +127,10 @@
           Exportar Planilha (.xlsx)
         </button>
 
+        <button id="btnVoiceRecordHeader" class="btn btn-voice" title="Lancar Despesa ou Receita por Voz">
+          <span class="pulse-mic">🎙️</span>
+          <span>Lancar por Voz</span>
+        </button>
         <button class="btn btn-primary" onclick="document.querySelector('[data-tab=novo-lancamento]').click()">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           + Novo Gasto
@@ -276,6 +280,17 @@
         <div style="margin-bottom: 24px; text-align: center;">
           <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 6px;">Adicionar Lançamento Rápido</h2>
           <p style="font-size: 13px; color: var(--text-secondary);">Cadastre despesas ou receitas e veja a atualização instantânea nos gráficos e no saldo anual.</p>
+        </div>
+
+        <!-- Banner de Atalho por Voz -->
+        <div class="voice-quick-banner">
+          <div class="voice-banner-info">
+            <span class="voice-badge">🎙️ Lancamento Rapido por Voz</span>
+            <p>Fale sua despesa e o assistente preenche e categoriza tudo em tempo real.</p>
+          </div>
+          <button id="btnVoiceFormTrigger" type="button" class="btn btn-voice-secondary">
+            🎙️ Falar Agora
+          </button>
         </div>
 
         <form id="formNewEntry">
@@ -741,6 +756,113 @@
     </section>
   </div>
 
+  
+  <!-- Floating Action Button de Voz -->
+  <button id="btnVoiceFab" class="voice-fab" title="Lancamento por Voz (Fale seu gasto)">
+    🎙️
+  </button>
+
+  <!-- Modal de Assistente de Voz -->
+  <div id="voiceModal" class="modal-backdrop">
+    <div class="voice-modal-box">
+      <div class="voice-modal-header">
+        <h3>🎙️ Lancamento por Voz</h3>
+        <button id="voiceModalClose" class="voice-modal-close" aria-label="Fechar">&times;</button>
+      </div>
+
+      <div class="voice-mic-container">
+        <button id="btnVoiceMicBig" class="btn-mic-big" title="Clique para Gravar / Parar">
+          🎙️
+        </button>
+        <div id="voiceWaveBars" class="voice-waves">
+          <div class="voice-wave-bar"></div>
+          <div class="voice-wave-bar"></div>
+          <div class="voice-wave-bar"></div>
+          <div class="voice-wave-bar"></div>
+          <div class="voice-wave-bar"></div>
+        </div>
+        <div id="voiceStatusText" class="voice-status-text">Toque no microfone e fale seu gasto...</div>
+      </div>
+
+      <div id="voiceLiveTranscript" class="voice-transcript-bubble">
+        Aguardando comando de voz...
+      </div>
+
+      <!-- Preview do Reconhecimento Inteligente -->
+      <div id="voiceParsedPreview" class="voice-preview-card" style="display: none;">
+        <div class="voice-preview-title">
+          <span>✨ Gasto Interpretado</span>
+          <span class="tag tag-voice">Origem: Voz</span>
+        </div>
+
+        <div class="voice-preview-grid">
+          <div class="voice-field full">
+            <label for="voiceDesc">Descricao</label>
+            <input type="text" id="voiceDesc" placeholder="Ex: Cafe, Gasolina, Almoco...">
+          </div>
+          <div class="voice-field">
+            <label for="voiceVal">Valor (R$)</label>
+            <input type="number" id="voiceVal" step="0.01" min="0.01" placeholder="0.00">
+          </div>
+          <div class="voice-field">
+            <label for="voiceType">Tipo</label>
+            <select id="voiceType">
+              <option value="variavel">Despesa Variavel</option>
+              <option value="fixa">Despesa Fixa</option>
+              <option value="receita">Receita</option>
+              <option value="invest">Investimento</option>
+            </select>
+          </div>
+          <div class="voice-field">
+            <label for="voiceCategory">Categoria</label>
+            <select id="voiceCategory">
+              <option value="Alimentação trabalho (limite)">Alimentacao trabalho (limite)</option>
+              <option value="Alimentação">Alimentacao & Supermercado</option>
+              <option value="Transporte">Transporte & Combustivel</option>
+              <option value="Saúde">Saude & Farmacia</option>
+              <option value="Lazer">Lazer & Restaurantes</option>
+              <option value="Moradia">Moradia & Aluguel</option>
+              <option value="Contas">Contas & Energia/Internet</option>
+              <option value="Salário">Salario / Remuneracao</option>
+              <option value="Investimentos">Investimentos / Aportes</option>
+              <option value="Outros">Outros</option>
+            </select>
+          </div>
+          <div class="voice-field">
+            <label for="voicePaymentMethod">Forma de Pagamento</label>
+            <select id="voicePaymentMethod">
+              <option value="C/C BB">💳 Cartao Banco do Brasil</option>
+              <option value="C/C Itaú">💳 Cartao Itau Uniclass</option>
+              <option value="C/C Nubank">🟣 Cartao Nubank</option>
+              <option value="C/C Empório Alex">🏬 Cartao Emporio Alex</option>
+              <option value="PIX">⚡ PIX / Debito</option>
+              <option value="Boleto">📄 Boleto</option>
+              <option value="Dinheiro">💵 Dinheiro</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="voice-modal-actions">
+        <div class="voice-modal-btn-row">
+          <button id="btnVoiceRetry" class="btn btn-secondary">
+            🔄 Falar de Novo
+          </button>
+          <button id="btnVoiceConfirmSave" class="btn btn-primary" style="background: #10b981; border-color: #10b981;">
+            ✅ Confirmar e Salvar
+          </button>
+        </div>
+        <button id="btnVoiceSendToForm" class="btn btn-secondary" style="font-size: 12px; padding: 6px; background: transparent; border: none; color: var(--text-muted); text-decoration: underline; cursor: pointer;">
+          Editar no formulario padrao &rarr;
+        </button>
+      </div>
+
+      <div class="voice-tips">
+        💡 <strong>Exemplos:</strong> "Cafe 17 e 83 no cartao BB" &bull; "Gasolina 100 reais no cartao Itau" &bull; "Almoco 35 no PIX"
+      </div>
+    </div>
+  </div>
+
   <!-- Modal de Confirmação -->
   <div id="confirmModal" class="modal-backdrop">
     <div class="modal-box">
@@ -772,6 +894,7 @@
   <script src="js/calculations.js"></script>
   <script src="js/charts.js"></script>
   <script src="js/exporter.js"></script>
+  <script src="js/voice-input.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

@@ -56,7 +56,7 @@ function handleRequest(e) {
       var sheet = ss.getSheetByName(sheetName);
       if (!sheet) {
         sheet = ss.insertSheet(sheetName);
-        sheet.appendRow(['Data', 'Descricao', 'Categoria', 'Tipo', 'Forma de Pagamento', 'Valor (R$)', 'Registrado em']);
+        sheet.appendRow(['Data', 'Descricao', 'Categoria', 'Tipo', 'Valor (R$)', 'Forma Pagamento', 'Origem', 'Registrado em']);
         sheet.getRange('A1:G1').setFontWeight('bold').setBackground('#1e293b').setFontColor('#ffffff');
       }
       sheet.appendRow([
@@ -64,8 +64,9 @@ function handleRequest(e) {
         params.descricao || 'Sem descricao',
         params.categoria || 'Geral',
         params.tipo || 'despesa',
-        params.formaPagamento || 'PIX',
         Number(params.valor) || 0,
+        params.formaPagamento || 'PIX',
+        params.origem || 'app',
         new Date()
       ]);
       return createJsonResponse({
